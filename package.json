@@ -5,6 +5,8 @@
   "description": "TypeScript template action",
   "main": "lib/main.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon --config nodemon.json src/app.ts",
     "build": "tsc",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
