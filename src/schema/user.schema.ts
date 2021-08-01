@@ -21,8 +21,8 @@ export const createUserSchema = object({
       street: string().required("Street is required"),
       city: string().required("City is required"),
       state: string(),
-      zip: string()
-    })
+      zip: string(),
+    }),
   }),
 });
 
@@ -36,14 +36,16 @@ export const updateUserSchema = object({
       [ref("password"), null],
       "Passwords must match"
     ),
-    dob: string()
-      .matches(/^\d{4}-\d{2}-\d{2}$/, "Must be in YYYY-MM-DD format"),
+    dob: string().matches(
+      /^\d{4}-\d{2}-\d{2}$/,
+      "Must be in YYYY-MM-DD format"
+    ),
     address: object({
       street: string(),
       city: string(),
       state: string(),
-      zip: string()
-    })
+      zip: string(),
+    }),
   }),
 });
 

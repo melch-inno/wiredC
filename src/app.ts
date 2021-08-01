@@ -11,10 +11,9 @@ const host = config.get("host") as string;
 const app = express();
 app.use(deserializeUser);
 
-app.use(express.static('static'));
+app.use(express.static("static"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
 
 app.listen(port, host, () => {
   log.info(`Server listening on http://${host}:${port}`);

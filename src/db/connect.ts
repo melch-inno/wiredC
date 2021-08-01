@@ -10,7 +10,7 @@ function connect() {
       useCreateIndex: true,
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useFindAndModify: false
+      useFindAndModify: false,
     })
     .then(() => {
       log.info("Database connected - (MongoDB)");

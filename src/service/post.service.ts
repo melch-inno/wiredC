@@ -4,25 +4,27 @@ import {
   UpdateQuery,
   QueryOptions,
 } from "mongoose";
-import {Post, PostDocument } from "../model";
+import { Post, PostDocument } from "../model";
 
-export function createPost(input: DocumentDefinition<PostDocument>) {
+export function createPost(
+  input: DocumentDefinition<PostDocument>
+): Promise<Object> {
   return Post.create(input);
 }
 
 export function findPost(
   query: FilterQuery<PostDocument>,
   options: QueryOptions = { lean: true }
-) {
-  return Post.findOne(query, {}, options);
+): Promise<any> {
+  return Post.findOne(query, {}, options) as any;
 }
 
 //find All Post
 export function findAllPost(
   query: FilterQuery<PostDocument>,
   options: QueryOptions = { lean: true }
-) {
-  return Post.find(query, {}, options);
+): Promise<any> {
+  return Post.find(query, {}, options) as any;
 }
 
 // update posts
@@ -30,10 +32,10 @@ export function findAndUpdate(
   query: FilterQuery<PostDocument>,
   update: UpdateQuery<PostDocument>,
   options: QueryOptions
-) {
-  return Post.findOneAndUpdate(query, update, options);
+): Promise<any> {
+  return Post.findOneAndUpdate(query, update, options) as any;
 }
 
-export function deletePost(query: FilterQuery<PostDocument>) {
-  return Post.findOneAndRemove(query);
+export function deletePost(query: FilterQuery<PostDocument>): Promise<any> {
+  return Post.findOneAndRemove(query) as any;
 }

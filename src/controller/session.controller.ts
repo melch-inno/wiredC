@@ -12,7 +12,6 @@ import {
   validatePassword,
 } from "../service";
 
-
 /**
  * @function oauthHandler
  * @description OAuth2 handler for login and signup
@@ -23,7 +22,7 @@ import {
 export async function oauthHandler(req: Request, res: Response) {
   const clientId = secrets.clientId as string;
   res.redirect(
-    `https://github.com/login/oauth/authorize?client_id=${clientId}`,
+    `https://github.com/login/oauth/authorize?client_id=${clientId}`
   );
 }
 
@@ -47,6 +46,7 @@ export async function createUserSessionHandler(req: Request, res: Response) {
   const session = await createSession(user._id, req.get("user-agent") || "");
 
   // create access token
+  //@ts-ignore
   const accessToken = createAccessToken({
     user,
     session,

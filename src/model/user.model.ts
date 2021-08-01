@@ -8,11 +8,13 @@ export interface UserDocument extends mongoose.Document {
   password: string;
   comparePassword(candidatePassword: string): Promise<boolean>;
   activationStatus: {
-    type: Boolean, default: false},
-    confirmationCode: { 
-      type: String, 
-      unique: true
-    },
+    type: Boolean;
+    default: false;
+  };
+  confirmationCode: {
+    type: String;
+    unique: true;
+  };
   dob: Date;
   address: object;
   description: string;

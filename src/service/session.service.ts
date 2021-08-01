@@ -1,68 +1,71 @@
-import {LeanDocument, FilterQuery, UpdateQuery} from 'mongoose'
-import config from 'config'
-import {get} from 'lodash'
-import {Session, SessionDocument, UserDocument} from '../model'
-import {sign, decode} from '../utils/jwt.utils'
-import {findUser} from '.'
+import { LeanDocument, FilterQuery, UpdateQuery } from "mongoose";
+import config from "config";
+import { get } from "lodash";
+import { Session, SessionDocument, UserDocument } from "../model";
+import { sign, decode } from "../utils/jwt.utils";
+import { findUser } from ".";
 
-export async function createSession(userId: string, userAgent: string) {
-  const session = await Session.create({user: userId, userAgent})
+export async function createSession(
+  userId: string,
+  userAgent: string
+): Promise<Object> {
+  const session = await Session.create({ user: userId, userAgent });
 
-  return session.toJSON()
+  return session.toJSON();
 }
 
 export function createAccessToken({
   user,
-  session
+  session,
 }: {
   user:
-    | Omit<UserDocument, 'password'>
-    | LeanDocument<Omit<UserDocument, 'password'>>
-  session:
-    | Omit<SessionDocument, 'password'>
-    | LeanDocument<Omit<SessionDocument, 'password'>>
-}) {
+    | Omit<UserDocument, "password">
+    | LeanDocument<Omit<UserDocument, "password">>;
+  session: any;
+}): any {
   // Build and return the new access token
   const accessToken = sign(
-    {...user, session: session._id},
-    {expiresIn: config.get('accessTokenTtl')} // 15 minutes
-  )
+    { ...user, session: session._id },
+    { expiresIn: config.get("accessTokenTtl") } // 15 minutes
+  );
 
-  return accessToken
+  return accessToken;
 }
 
 export async function reIssueAccessToken({
-  refreshToken
+  refreshToken,
 }: {
-  refreshToken: string
-}) {
+  refreshToken: string;
+}): Promise<string | boolean> {
   // Decode the refresh token
-  const {decoded} = decode(refreshToken)
+  const { decoded }: any = decode(refreshToken);
 
-  if (!decoded || !get(decoded, '_id')) return false
+  if (!decoded || !get(decoded, "_id")) return false;
 
   // Get the session
-  const session = await Session.findById(get(decoded, '_id'))
+  const session = await Session.findById(get(decoded, "_id"));
 
   // Make sure the session is still valid
-  if (!session || !session?.valid) return false
+  if (!session || !session?.valid) return false;
 
-  const user = await findUser({_id: session.user})
+  const user = await findUser({ _id: session.user });
 
-  if (!user) return false
+  if (!user) return false;
 
-  const accessToken = createAccessToken({user, session})
+  const accessToken = createAccessToken({ user, session });
 
-  return accessToken
+  return accessToken;
 }
 
 export async function updateSession(
   query: FilterQuery<SessionDocument>,
   update: UpdateQuery<SessionDocument>
-) {
-  return Session.updateOne(query, update)
+): Promise<Object> {
+  return (await Session.findOneAndUpdate(query, update)) as object;
 }
 
-export async function findSessions(query: FilterQuery<SessionDocument>) {
-  return Session.find(query).lean()
+export async function findSessions(
+  query: FilterQuery<SessionDocument>
+): Promise<SessionDocument[] | any> {
+  return Session.find(query).lean();
 }

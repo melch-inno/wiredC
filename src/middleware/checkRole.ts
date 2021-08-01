@@ -1,11 +1,7 @@
 import { get } from "lodash";
 import { Request, Response, NextFunction } from "express";
 
-const checkRole = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const checkRole = async (req: Request, res: Response, next: NextFunction) => {
   const user = get(req, "user");
 
   if (!user) {
@@ -13,11 +9,12 @@ const checkRole = async (
   }
 
   if (!user.isAdmin && user._id !== req.params.userId) {
-      return res.status(403).json({message: `${req.params.userId}, "you are not authorized for this task"`});
+    return res.status(403).json({
+      message: `${req.params.userId}, "you are not authorized for this task"`,
+    });
   }
 
   return next();
 };
 
 export default checkRole;
-

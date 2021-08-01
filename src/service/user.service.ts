@@ -12,7 +12,9 @@ import { User, UserDocument } from "../model";
  * @description Service for create user CRUD operations
  * @return db.model<UserDocument>("User").find(filter);
  */
-export async function createUser(input: DocumentDefinition<UserDocument>) {
+export async function createUser(
+  input: DocumentDefinition<UserDocument>
+): Promise<Object> {
   try {
     return await User.create(input);
   } catch (error) {
@@ -30,8 +32,9 @@ export async function createUser(input: DocumentDefinition<UserDocument>) {
 export async function ConfirmationCode(
   query: FilterQuery<UserDocument>,
   status: UpdateQuery<UserDocument>,
-  options: QueryOptions) {
-  return User.findByIdAndUpdate( query, status, options);
+  options: QueryOptions
+): Promise<any> {
+  return User.findByIdAndUpdate(query, status, options);
 }
 
 /**
@@ -57,10 +60,9 @@ export async function updateUser(
   query: FilterQuery<UserDocument>,
   updateItem: UpdateQuery<UserDocument>,
   options: QueryOptions
-) {  
-  return await User.findByIdAndUpdate(query, updateItem, options);  
+): Promise<any> {
+  return await User.findByIdAndUpdate(query, updateItem, options);
 }
-
 
 /**
  * @function validatePassword
@@ -77,7 +79,7 @@ export async function validatePassword({
 }: {
   email: UserDocument["email"];
   password: string;
-}) {
+}): Promise<any> {
   const user = await User.findOne({ email });
   if (!user) {
     return false;
@@ -90,7 +92,6 @@ export async function validatePassword({
   return omit(user.toJSON(), "password");
 }
 
-
 /**
  * @function deleteUser
  * @description Delete user
@@ -102,6 +103,6 @@ export async function deleteAndReactivate(
   query: FilterQuery<UserDocument>,
   update: UpdateQuery<UserDocument>,
   options: QueryOptions
-) {
+): Promise<UserDocument> {
   return await User.findByIdAndUpdate(query, update, options).lean();
 }
