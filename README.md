@@ -1,8 +1,6 @@
-<!-- <p align="center">
-  <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
-</p> -->
-
+<p align="center">
 [![build-test](https://github.com/melch-inno/wiredC/actions/workflows/test.yml/badge.svg)](https://github.com/melch-inno/wiredC/actions/workflows/test.yml)
+</p>
 
 # Create a JavaScript Action using TypeScript
 
