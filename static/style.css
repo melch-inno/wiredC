@@ -7,7 +7,11 @@ body {
   justify-content: center;
   align-items: center;
   background: rgb(71, 43, 186);
-  background: linear-gradient(0deg, rgba(71, 43, 186, 1) 0%, rgba(44, 25, 121, 1) 100%);
+  background: linear-gradient(
+    0deg,
+    rgb(10, 165, 236) 0%,
+    rgb(22, 115, 131) 100%
+  );
 }
 
 .content {
@@ -48,7 +52,7 @@ h1 {
   padding-top: 2px;
   border-radius: 20px;
   color: white;
-  background: rgba(71, 43, 186, 1);
+  background: rgb(21, 91, 109);
   margin: 0 auto;
   border: none;
   font-size: 14px;

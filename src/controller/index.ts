@@ -1,16 +1,19 @@
 export {
-    createUserSessionHandler,
-    invalidateUserSessionHandler,
-    getUserSessionsHandler
-} from './session.controller';
+  createUserSessionHandler,
+  invalidateUserSessionHandler,
+  getUserSessionsHandler
+} from './session.controller'
 export {
-    createUserHandler, confirmationCodeHandler, getUserHandler, updateUserHandler, deleteAndReactivateUserHandler
-} from './user.controller';
-
+  createUserHandler,
+  confirmationCodeHandler,
+  getUserHandler,
+  updateUserHandler,
+  deleteAndReactivateUserHandler
+} from './user.controller'
 export {
-    createPostHandler,
-    getPostHandler,
-    getAllPostsHandler,
-    updatePostHandler,
-    deletePostHandler,
-} from './post.controller';
+  createPostHandler,
+  getPostHandler,
+  getAllPostsHandler,
+  updatePostHandler,
+  deletePostHandler
+} from './post.controller'
