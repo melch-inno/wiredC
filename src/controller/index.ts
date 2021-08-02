@@ -8,6 +8,7 @@ export {
   confirmationCodeHandler,
   getUserHandler,
   updateUserHandler,
+  followUserHandler,
   deleteAndReactivateUserHandler,
 } from "./user.controller";
 export {

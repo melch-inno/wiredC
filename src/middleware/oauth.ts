@@ -1,9 +1,11 @@
+/* eslint-disable github/no-then */
 import { Request, Response } from "express";
 import { get } from "lodash";
 import axios from "axios";
 import secrets from "../../config/secrets";
+import log from "../logger";
 
-export async function OAuthHandler(req: Request, res: Response) {
+export async function OAuthHandler(req: Request, res: Response): Promise<void> {
   res.redirect(
     `https://github.com/login/oauth/authorize?client_id=${secrets.clientId}`
   );
@@ -12,11 +14,10 @@ export async function OAuthHandler(req: Request, res: Response) {
 export async function OAuthCallbackHandler(
   req: Request,
   res: Response
-): Promise<any> {
-  // const client_id: any = get(req, 'query.client_id')
-  const client_secret = secrets.clientSecrets as string;
+): Promise<Object | void> {
+  const client_secret = secrets.clientSecrets;
   const email = get(req, "query.email");
-  const client_id = secrets.clientId as string;
+  const client_id = secrets.clientId;
   const code = get(req, "query.code");
 
   const body = {
@@ -30,7 +31,7 @@ export async function OAuthCallbackHandler(
   axios
     .post("https://github.com/login/oauth/access_token", body, opts)
     .then((_res) => {
-      console.log(_res);
+      log.info("Github OAuth callback", _res);
     })
     .catch((err) => res.status(500).json({ err: err.message }));
 

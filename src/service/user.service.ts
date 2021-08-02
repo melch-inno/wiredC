@@ -33,6 +33,7 @@ export async function ConfirmationCode(
   query: FilterQuery<UserDocument>,
   status: UpdateQuery<UserDocument>,
   options: QueryOptions
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   return User.findByIdAndUpdate(query, status, options);
 }
@@ -44,7 +45,9 @@ export async function ConfirmationCode(
  * @return db.model<UserDocument>("User").findOne(id);
  * @throws {Error}
  */
-export async function findUser(query: FilterQuery<UserDocument>) {
+export async function findUser(
+  query: FilterQuery<UserDocument>
+): Promise<UserDocument | Object> {
   return User.findOne(query).lean();
 }
 
@@ -60,6 +63,7 @@ export async function updateUser(
   query: FilterQuery<UserDocument>,
   updateItem: UpdateQuery<UserDocument>,
   options: QueryOptions
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   return await User.findByIdAndUpdate(query, updateItem, options);
 }
@@ -79,6 +83,7 @@ export async function validatePassword({
 }: {
   email: UserDocument["email"];
   password: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }): Promise<any> {
   const user = await User.findOne({ email });
   if (!user) {

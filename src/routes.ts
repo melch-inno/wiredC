@@ -5,6 +5,7 @@ import {
   confirmationCodeHandler,
   getUserHandler,
   updateUserHandler,
+  followUserHandler,
   deleteAndReactivateUserHandler,
   createPostHandler,
   updatePostHandler,
@@ -32,7 +33,7 @@ import {
   deletePostSchema,
 } from "./schema";
 
-export default function (app: Express): void {
+export default function Route(app: Express): void {
   app.get("/healthcheck", (req: Request, res: Response) =>
     res.sendStatus(200).json({ message: "OK" })
   );
@@ -60,11 +61,13 @@ export default function (app: Express): void {
   // get user
   app.get("/api/user/:userId", checkRole, getUserHandler);
 
+  // followUserHandler
+  app.put("/api/follow", requiresUser, followUserHandler);
+
   // update user
   app.put(
     "/api/user/:userId",
-    checkRole,
-    validateRequest(updateUserSchema),
+    [checkRole, validateRequest(updateUserSchema)],
     updateUserHandler
   );
 
@@ -104,7 +107,7 @@ export default function (app: Express): void {
   // Delete a post
   app.delete(
     "/api/posts/:postId",
-    [checkRole, validateRequest(deletePostSchema)],
+    [requiresUser, validateRequest(deletePostSchema)],
     deletePostHandler
   );
 }

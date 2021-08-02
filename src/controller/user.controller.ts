@@ -1,12 +1,19 @@
+/* eslint-disable github/no-then */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from "express";
-import { omit, get } from "lodash";
+import { omit, get, isEmpty } from "lodash";
 import {
   createUser,
   ConfirmationCode,
   findUser,
   deleteAndReactivate,
+  // createFollow,
+  // followUser,
+  // unfollowUser,
+  checkFollowing,
   updateUser,
 } from "../service";
+import { Follow } from "../model";
 import log from "../logger";
 
 /**
@@ -22,9 +29,9 @@ export async function createUserHandler(
   res: Response
 ): Promise<any | Object> {
   try {
-    const checkUser = await findUser({ email: req.body.email });
+    const checkUser: any = await findUser({ email: req.body.email });
 
-    if (checkUser && !checkUser.isDeleted) {
+    if (checkUser && !checkUser?.isDeleted) {
       return res.status(409).send("User already exist");
     } else if (checkUser?.isDeleted) {
       return res
@@ -53,7 +60,7 @@ export async function confirmationCodeHandler(
 ): Promise<any> {
   try {
     const code = get(req, "params.code");
-    const user = await findUser({ confirmationCode: code });
+    const user: any = await findUser({ confirmationCode: code });
 
     if (!user) {
       return res.status(404).send("User not found");
@@ -61,11 +68,7 @@ export async function confirmationCodeHandler(
       return res.status(409).send("User already activated");
     }
 
-    const confirm = await ConfirmationCode(
-      { _id: user?._id },
-      { status: true },
-      { new: true }
-    );
+    await ConfirmationCode({ _id: user?._id }, { status: true }, { new: true });
     return res.sendStatus(200);
   } catch (e) {
     log.error(e);
@@ -84,7 +87,7 @@ export async function getUserHandler(
   res: Response
 ): Promise<any> {
   try {
-    const user = await findUser({ _id: req.params.userId });
+    const user: any = await findUser({ _id: req.params.userId });
 
     if (!user || user?.isDeleted) {
       return res.status(404).send("User not found");
@@ -113,7 +116,7 @@ export async function updateUserHandler(
     const update = req.body;
 
     // check if the user to be updated exist
-    const user = await findUser({ _id: userId });
+    const user: any = await findUser({ _id: userId });
     if (!user || user?.isDeleted) {
       return res.status(404).send("User not found");
     }
@@ -126,6 +129,117 @@ export async function updateUserHandler(
   } catch (e) {
     log.error(e);
     return res.status(404).send(e.message);
+  }
+}
+/**
+ * @function followUserHandler
+ * @description follow user handler
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @throws {Error
+ */
+export async function followUserHandler(
+  req: Request,
+  res: Response
+): Promise<Object | void> {
+  const user = get(req, "user")._id;
+  const followThisId = get(req, "body.following");
+
+  if (user === followThisId) {
+    return res.status(400).json({ message: "You cannot follow yourself" });
+  }
+
+  const CurrentUserFollow = await checkFollowing({ user: followThisId });
+
+  if (isEmpty(CurrentUserFollow.data)) {
+    await Follow.create({
+      user,
+      followers: [],
+      following: followThisId,
+    })
+      .then(
+        () => {
+          Follow.create({
+            user: followThisId,
+            followers: user,
+            following: [],
+          });
+          res.sendStatus(200);
+        },
+        (err) => {
+          log.error(err);
+          return res.status(500).send(err);
+        }
+      )
+      .catch((e) => {
+        log.error(e);
+      });
+  } else {
+    let checkFollow = "false";
+    // eslint-disable-next-line github/array-foreach
+    CurrentUserFollow.data[0].followers.forEach((item: any) => {
+      if (String(item) === String(user)) {
+        checkFollow = "true";
+        return true;
+      }
+    });
+
+    if (checkFollow === "false") {
+      await Follow.findByIdAndUpdate(
+        { user },
+        {
+          $push: { following: followThisId },
+        },
+        { new: true }
+      )
+        .then(
+          () => {
+            Follow.findByIdAndUpdate(
+              { user: followThisId },
+              {
+                $push: { followers: user },
+              },
+              { new: true }
+            );
+            res.sendStatus(200);
+          },
+          (err) => {
+            log.error(err);
+            return res.status(500).send(err);
+          }
+        )
+        .catch((e) => {
+          log.error(e);
+        });
+      return res.sendStatus(200);
+    } else {
+      await Follow.findByIdAndUpdate(
+        { user },
+        {
+          $pull: { following: followThisId },
+        },
+        { new: true }
+      )
+        .then(
+          () => {
+            Follow.findByIdAndUpdate(
+              { user: followThisId },
+              {
+                $pull: { followers: user },
+              },
+              { new: true }
+            );
+            res.sendStatus(200);
+          },
+          (err) => {
+            log.error(err);
+            return res.status(500).send(err);
+          }
+        )
+        .catch((e) => {
+          log.error(e);
+        });
+    }
   }
 }
 
@@ -144,7 +258,7 @@ export async function deleteAndReactivateUserHandler(
   try {
     const reqObject = req.body;
 
-    const user = await findUser({ _id: reqObject.userId });
+    const user: any = await findUser({ _id: reqObject.userId });
 
     if (!user || user?.isDeleted) {
       return res.status(404).send("User not found");

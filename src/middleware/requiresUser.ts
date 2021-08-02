@@ -5,7 +5,7 @@ const requiresUser = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<Object | void> => {
   const user = get(req, "user");
 
   if (!user) {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from "express";
 import { get } from "lodash";
 import {
@@ -15,7 +16,10 @@ import {
  * call the  createPost service to create the post,
  * return the post
  */
-export async function createPostHandler(req: Request, res: Response) {
+export async function createPostHandler(
+  req: Request,
+  res: Response
+): Promise<Object> {
   const userId = get(req, "user._id");
   const body = req.body;
 
@@ -32,12 +36,15 @@ export async function createPostHandler(req: Request, res: Response) {
  * call the findAndUpdate service to update the post,
  * return the updated post
  */
-export async function updatePostHandler(req: Request, res: Response) {
+export async function updatePostHandler(
+  req: Request,
+  res: Response
+): Promise<Object> {
   const userId = get(req, "user._id");
   const postId = get(req, "params.postId");
   const update = req.body;
 
-  const post = await findPost({ postId }); // get the post
+  const post: any = await findPost({ postId }); // get the post
 
   if (!post) {
     return res.sendStatus(404).json({ message: "Post not found" });
@@ -45,9 +52,7 @@ export async function updatePostHandler(req: Request, res: Response) {
 
   // check if the user is the author of the post
   if (String(post.user) !== userId) {
-    return res
-      .sendStatus(401)
-      .json({ message: "You are not the author of this post" });
+    return false;
   }
 
   // call the findAndUpdate service to update the post
@@ -62,7 +67,10 @@ export async function updatePostHandler(req: Request, res: Response) {
  * call the findPost service to find the post,
  * return the post
  */
-export async function getPostHandler(req: Request, res: Response) {
+export async function getPostHandler(
+  req: Request,
+  res: Response
+): Promise<Object> {
   const postId = get(req, "params.postId");
   const post = await findPost({ postId }); // get the post from the findPost service
 
@@ -79,7 +87,10 @@ export async function getPostHandler(req: Request, res: Response) {
  * call the findAllPost service to find all the posts,
  * return the posts
  */
-export async function getAllPostsHandler(req: Request, res: Response) {
+export async function getAllPostsHandler(
+  req: Request,
+  res: Response
+): Promise<Object> {
   const userId = get(req, "user._id");
 
   const posts = await findAllPost({ user: userId }); // get the posts from the findAllPost service
@@ -94,11 +105,14 @@ export async function getAllPostsHandler(req: Request, res: Response) {
  * call the service to delete the post,
  * return
  */
-export async function deletePostHandler(req: Request, res: Response) {
+export async function deletePostHandler(
+  req: Request,
+  res: Response
+): Promise<Object> {
   const userId = get(req, "user._id");
   const postId = get(req, "params.postId");
 
-  const post = await findPost({ postId });
+  const post: any = await findPost({ postId });
 
   if (!post) {
     return res.sendStatus(404).json({ message: "Post not found" });

@@ -1,7 +1,8 @@
-import { LeanDocument, FilterQuery, UpdateQuery } from "mongoose";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { FilterQuery, UpdateQuery } from "mongoose";
 import config from "config";
 import { get } from "lodash";
-import { Session, SessionDocument, UserDocument } from "../model";
+import { Session, SessionDocument } from "../model";
 import { sign, decode } from "../utils/jwt.utils";
 import { findUser } from ".";
 
@@ -18,9 +19,7 @@ export function createAccessToken({
   user,
   session,
 }: {
-  user:
-    | Omit<UserDocument, "password">
-    | LeanDocument<Omit<UserDocument, "password">>;
+  user: any;
   session: any;
 }): any {
   // Build and return the new access token

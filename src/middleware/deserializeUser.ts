@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { get } from "lodash";
 import { Request, Response, NextFunction } from "express";
 import { decode } from "../utils/jwt.utils";
@@ -7,7 +8,7 @@ const deserializeUser = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const accessToken = get(req, "headers.authorization", "").replace(
     /^Bearer\s/,
     ""
@@ -27,12 +28,14 @@ const deserializeUser = async (
   }
 
   if (expired && refreshToken) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const newAccessToken: any = await reIssueAccessToken({ refreshToken });
 
     if (newAccessToken) {
       // Add the new access token to the response header
       res.setHeader("x-access-token", newAccessToken);
 
+      // eslint-disable-next-line no-shadow
       const { decoded } = decode(newAccessToken);
 
       // @ts-ignore

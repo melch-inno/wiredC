@@ -8,3 +8,5 @@ export {
   updatePostSchema,
   deletePostSchema,
 } from "./post.schema";
+
+export { followUserSchema } from "./follow.schema";

@@ -41,7 +41,8 @@ const UserSchema = new mongoose.Schema(
 );
 
 UserSchema.pre("save", async function (next: mongoose.HookNextFunction) {
-  let user = this as UserDocument;
+  // eslint-disable-next-line no-invalid-this
+  const user = this as UserDocument;
 
   // only hash the password if it has been modified (or is new)
   if (!user.isModified("password")) return next();
@@ -49,7 +50,7 @@ UserSchema.pre("save", async function (next: mongoose.HookNextFunction) {
   // Random additional data
   const salt = await bcrypt.genSalt(config.get("saltWorkFactor"));
 
-  const hash = await bcrypt.hashSync(user.password, salt);
+  const hash = bcrypt.hashSync(user.password, salt);
 
   // Replace the password with the hash
   user.password = hash;
@@ -63,7 +64,8 @@ UserSchema.methods.comparePassword = async function (
 ) {
   const user = this as UserDocument;
 
-  return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
+  // eslint-disable-next-line github/no-then
+  return bcrypt.compare(candidatePassword, user.password).catch(() => false);
 };
 
 const User = mongoose.model<UserDocument>("User", UserSchema);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import config from "config";
 import secrets from "../../config/secrets";
 import { get } from "lodash";
@@ -19,8 +20,8 @@ import {
  * @param {Response} res
  * @returns {Promise<void>}
  */
-export async function oauthHandler(req: Request, res: Response) {
-  const clientId = secrets.clientId as string;
+export async function oauthHandler(req: Request, res: Response): Promise<void> {
+  const clientId = secrets.clientId;
   res.redirect(
     `https://github.com/login/oauth/authorize?client_id=${clientId}`
   );
@@ -34,7 +35,10 @@ export async function oauthHandler(req: Request, res: Response) {
  * @returns {Promise<void>}
  * @private
  */
-export async function createUserSessionHandler(req: Request, res: Response) {
+export async function createUserSessionHandler(
+  req: Request,
+  res: Response
+): Promise<Object | any> {
   // validate the email and password
   const user = await validatePassword(req.body);
 
@@ -46,7 +50,6 @@ export async function createUserSessionHandler(req: Request, res: Response) {
   const session = await createSession(user._id, req.get("user-agent") || "");
 
   // create access token
-  //@ts-ignore
   const accessToken = createAccessToken({
     user,
     session,
@@ -64,7 +67,7 @@ export async function createUserSessionHandler(req: Request, res: Response) {
 export async function invalidateUserSessionHandler(
   req: Request,
   res: Response
-) {
+): Promise<Object> {
   const sessionId = get(req, "user.session");
 
   await updateSession({ _id: sessionId }, { valid: false });
@@ -72,7 +75,10 @@ export async function invalidateUserSessionHandler(
   return res.sendStatus(200);
 }
 
-export async function getUserSessionsHandler(req: Request, res: Response) {
+export async function getUserSessionsHandler(
+  req: Request,
+  res: Response
+): Promise<Object> {
   const userId = get(req, "user._id");
 
   const sessions = await findSessions({ user: userId, valid: true });
