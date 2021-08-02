@@ -2,6 +2,8 @@
   <a href="https://github.com/melch-inno/wiredC/actions"><img alt="typescript-action status" src="https://github.com/melch-inno/wiredC/actions/workflows/test.yml/badge.svg"></a>
 </p>
 
+&& npm run lint
+
 # Create a JavaScript Action using TypeScript
 
 Use this template to bootstrap the creation of a TypeScript action.:rocket:
@@ -107,3 +109,6 @@ See the [actions tab](https://github.com/actions/typescript-action/actions) for 
 ## Usage:
 
 After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and latest V1 action
+
+
+&& npm run lint 
