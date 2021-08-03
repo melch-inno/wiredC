@@ -6,16 +6,14 @@ import {
 } from "mongoose";
 import { Post, PostDocument } from "../model";
 
-export async function createPost(
-  input: DocumentDefinition<PostDocument>
-): Promise<Object | null> {
-  return await Post.create(input);
+export function createPost(input: DocumentDefinition<PostDocument>): any {
+  return Post.create(input);
 }
 
 export async function findPost(
   query: FilterQuery<PostDocument>,
   options: QueryOptions = { lean: true }
-): Promise<Object | null> {
+): Promise<any> {
   return await Post.findOne(query, {}, options);
 }
 
@@ -23,21 +21,19 @@ export async function findPost(
 export async function findAllPost(
   query: FilterQuery<PostDocument>,
   options: QueryOptions = { lean: true }
-): Promise<Object | null> {
+): Promise<any> {
   return await Post.find(query, {}, options);
 }
 
 // update posts
-export async function findAndUpdate(
+export function findAndUpdate(
   query: FilterQuery<PostDocument>,
   update: UpdateQuery<PostDocument>,
   options: QueryOptions
-): Promise<Object | null> {
-  return await Post.findOneAndUpdate(query, update, options);
+): any {
+  return Post.findOneAndUpdate(query, update, options);
 }
 
-export async function deletePost(
-  query: FilterQuery<PostDocument>
-): Promise<Object | null> {
-  return await Post.findOneAndRemove(query);
+export function deletePost(query: FilterQuery<PostDocument>): any {
+  return Post.findOneAndRemove(query);
 }
