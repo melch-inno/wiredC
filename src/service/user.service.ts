@@ -6,6 +6,7 @@ import {
 } from "mongoose";
 import { omit } from "lodash";
 import { User, UserDocument } from "../model";
+import log from "../logger";
 
 /**
  * @function UserService
@@ -35,7 +36,11 @@ export async function ConfirmationCode(
   options: QueryOptions
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
-  return User.findByIdAndUpdate(query, status, options);
+  try {
+    return User.findByIdAndUpdate(query, status, options);
+  } catch (error) {
+    log.error(error);
+  }
 }
 
 /**
@@ -65,7 +70,11 @@ export async function updateUser(
   options: QueryOptions
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
-  return await User.findByIdAndUpdate(query, updateItem, options);
+  try {
+    return await User.findByIdAndUpdate(query, updateItem, options);
+  } catch (error) {
+    log.error(error);
+  }
 }
 
 /**
@@ -85,16 +94,20 @@ export async function validatePassword({
   password: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }): Promise<any> {
-  const user = await User.findOne({ email });
-  if (!user) {
-    return false;
-  }
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return false;
+    }
 
-  const isValid = await user.comparePassword(password);
-  if (!isValid) {
-    return false;
+    const isValid = await user.comparePassword(password);
+    if (!isValid) {
+      return false;
+    }
+    return omit(user.toJSON(), "password");
+  } catch (error) {
+    log.error(error);
   }
-  return omit(user.toJSON(), "password");
 }
 
 /**

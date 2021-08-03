@@ -37,11 +37,11 @@ export default function Route(app: Express): void {
   app.get("/healthcheck", (req: Request, res: Response) =>
     res.sendStatus(200).json({ message: "OK" })
   );
-
+  // Static page to display the login page  with gihub auth
   app.get("/", (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, "/static/index.html"));
   });
-
+  // OAuthentication
   app.get("/api/oauth", OAuthHandler);
   app.get("/api/oauth/callback", OAuthCallbackHandler);
 
@@ -67,7 +67,7 @@ export default function Route(app: Express): void {
   // update user
   app.put(
     "/api/user/:userId",
-    [checkRole, validateRequest(updateUserSchema)],
+    [requiresUser, validateRequest(updateUserSchema)],
     updateUserHandler
   );
 

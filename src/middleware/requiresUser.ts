@@ -1,18 +1,24 @@
 import { get } from "lodash";
 import { Request, Response, NextFunction } from "express";
+import log from "../logger";
 
 const requiresUser = async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<Object | void> => {
-  const user = get(req, "user");
+): Promise<any> => {
+  try {
+    const user = get(req, "user");
 
-  if (!user) {
-    return res.sendStatus(403);
+    if (!user) {
+      return res.sendStatus(403);
+    }
+
+    return next();
+  } catch (error) {
+    log.error(error);
+    return res.sendStatus(500);
   }
-
-  return next();
 };
 
 export default requiresUser;

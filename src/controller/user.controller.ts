@@ -141,105 +141,111 @@ export async function updateUserHandler(
 export async function followUserHandler(
   req: Request,
   res: Response
-): Promise<Object | void> {
-  const user = get(req, "user")._id;
+): Promise<Object | any> {
+  const user: String = await get(req, "user._id");
   const followThisId = get(req, "body.following");
+  log.info(followThisId);
 
-  if (user === followThisId) {
-    return res.status(400).json({ message: "You cannot follow yourself" });
-  }
-
-  const CurrentUserFollow = await checkFollowing({ user: followThisId });
-
-  if (isEmpty(CurrentUserFollow.data)) {
-    await Follow.create({
-      user,
-      followers: [],
-      following: followThisId,
-    })
-      .then(
-        () => {
-          Follow.create({
-            user: followThisId,
-            followers: user,
-            following: [],
-          });
-          res.sendStatus(200);
-        },
-        (err) => {
-          log.error(err);
-          return res.status(500).send(err);
-        }
-      )
-      .catch((e) => {
-        log.error(e);
-      });
-  } else {
-    let checkFollow = "false";
-    // eslint-disable-next-line github/array-foreach
-    CurrentUserFollow.data[0].followers.forEach((item: any) => {
-      if (String(item) === String(user)) {
-        checkFollow = "true";
-        return true;
-      }
-    });
-
-    if (checkFollow === "false") {
-      await Follow.findByIdAndUpdate(
-        { user },
-        {
-          $push: { following: followThisId },
-        },
-        { new: true }
-      )
-        .then(
-          () => {
-            Follow.findByIdAndUpdate(
-              { user: followThisId },
-              {
-                $push: { followers: user },
-              },
-              { new: true }
-            );
-            res.sendStatus(200);
-          },
-          (err) => {
-            log.error(err);
-            return res.status(500).send(err);
-          }
-        )
-        .catch((e) => {
-          log.error(e);
-        });
-      return res.sendStatus(200);
-    } else {
-      await Follow.findByIdAndUpdate(
-        { user },
-        {
-          $pull: { following: followThisId },
-        },
-        { new: true }
-      )
-        .then(
-          () => {
-            Follow.findByIdAndUpdate(
-              { user: followThisId },
-              {
-                $pull: { followers: user },
-              },
-              { new: true }
-            );
-            res.sendStatus(200);
-          },
-          (err) => {
-            log.error(err);
-            return res.status(500).send(err);
-          }
-        )
-        .catch((e) => {
-          log.error(e);
-        });
+  try {
+    if (user === followThisId) {
+      return res.status(400).json({ message: "You cannot follow yourself" });
     }
+    const CurrentUserFollow = await checkFollowing({ user: followThisId });
+
+    log.info(`user ${user} `);
+
+    if (isEmpty(CurrentUserFollow.data)) {
+      await Follow.create({
+        user,
+        followers: [],
+        following: followThisId,
+      })
+        .then(
+          () => {
+            Follow.create({
+              user: followThisId,
+              followers: user,
+              following: [],
+            });
+            res.sendStatus(200);
+          },
+          (err) => {
+            log.error(err);
+            return res.status(500).send(err);
+          }
+        )
+        .catch((e) => {
+          log.error(e);
+        });
+    } else {
+      let checkFollow = "false";
+      // eslint-disable-next-line github/array-foreach
+      CurrentUserFollow.data[0].followers.forEach((item: any) => {
+        if (String(item) === String(user)) {
+          checkFollow = "true";
+          return true;
+        }
+      });
+
+      if (checkFollow === "false") {
+        Follow.findOneAndUpdate(
+          { user },
+          {
+            $push: { following: followThisId },
+          },
+          { new: true }
+        )
+          .then(
+            () => {
+              Follow.findOneAndUpdate(
+                { user: followThisId },
+                {
+                  $push: { followers: user },
+                },
+                { new: true }
+              );
+              res.sendStatus(200);
+            },
+            (err) => {
+              log.error(err);
+              return res.status(500).send(err);
+            }
+          )
+          .catch((e) => {
+            log.error(e);
+          });
+      } else {
+        Follow.findOneAndUpdate(
+          { user },
+          {
+            $pull: { following: followThisId },
+          },
+          { new: true }
+        )
+          .then(
+            () => {
+              Follow.findOneAndUpdate(
+                { user: followThisId },
+                {
+                  $pull: { followers: user },
+                },
+                { new: true }
+              );
+              res.sendStatus(200);
+            },
+            (err) => {
+              log.error(err);
+              return res.status(500).send(err);
+            }
+          )
+          .catch((e) => {
+            log.error(e);
+          });
+      }
+    }
+  } catch (error) {
+    log.error(error);
+    return res.status(400).json({ message: error });
   }
 }
 

@@ -142,10 +142,11 @@ export async function deletePostHandler(
         .sendStatus(401)
         .json({ message: "You are not the author of this post" });
     } // check if the user is the author of the post
+    else {
+      deletePost({ postId }); // delete the post
 
-    deletePost({ postId }); // delete the post
-
-    return res.sendStatus(200).json({ message: "Post deleted" });
+      return res.sendStatus(200).json({ message: "Post deleted" });
+    }
   } catch (error) {
     log.info(error);
     return res.status(500).send(error);

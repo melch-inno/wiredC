@@ -6,13 +6,6 @@ import {
 } from "mongoose";
 import { Post, PostDocument } from "../model";
 
-interface PostItem {
-  _id: string;
-  title: string;
-  body: string;
-  user: string;
-}
-
 export async function createPost(
   input: DocumentDefinition<PostDocument>
 ): Promise<PostDocument | Object | null> {
