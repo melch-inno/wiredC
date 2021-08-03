@@ -8,6 +8,8 @@ import {
   deletePost,
 } from "../service";
 
+import log from "../logger";
+
 /**
  * A function to create a new post handler
  * get the user id from the request,
@@ -19,11 +21,16 @@ export async function createPostHandler(
   req: Request,
   res: Response
 ): Promise<Object> {
-  const userId = get(req, "user._id");
-  const body = req.body;
+  try {
+    const userId = get(req, "user._id");
+    const body = req.body;
 
-  const post = createPost({ ...body, user: userId }); // call the createPost service to create the post
-  return res.send(post);
+    const post = await createPost({ ...body, user: userId }); // call the createPost service to create the post
+    return res.send(post);
+  } catch (error) {
+    log.info(error);
+    return res.status(500).send(error);
+  }
 }
 
 /**
@@ -37,28 +44,30 @@ export async function createPostHandler(
 export async function updatePostHandler(
   req: Request,
   res: Response
-): Promise<Object> {
-  const userId = get(req, "user._id");
-  const postId = get(req, "params.postId");
-  const update = req.body;
+): Promise<Object | null> {
+  try {
+    const userId = get(req, "user._id");
+    const postId = get(req, "params.postId");
+    const update = req.body;
 
-  const post = await findPost({ postId }); // get the post
+    const post: any = await findPost({ postId }); // get the post
 
-  if (!post) {
-    return res.sendStatus(404).json({ message: "Post not found" });
+    if (!post.user) {
+      return res.sendStatus(404);
+    }
+
+    // check if the user is the author of the post
+    if (String(post.user) !== userId) {
+      return res.sendStatus(401);
+    }
+
+    // call the findAndUpdate service to update the post
+    const updatedPost = await findAndUpdate({ postId }, update, { new: true });
+    return res.status(200).json(updatedPost);
+  } catch (error) {
+    log.info(error);
+    return res.status(500).send(error);
   }
-
-  // check if the user is the author of the post
-  if (String(post.user) !== userId) {
-    return res
-      .sendStatus(401)
-      .json({ message: "You are not the author of this post" });
-  }
-
-  // call the findAndUpdate service to update the post
-  const updatedPost = await findAndUpdate({ postId }, update, { new: true });
-
-  return res.send(updatedPost);
 }
 
 /**
@@ -70,14 +79,19 @@ export async function updatePostHandler(
 export async function getPostHandler(
   req: Request,
   res: Response
-): Promise<any> {
-  const postId = get(req, "params.postId");
-  const post = findPost({ postId }); // get the post from the findPost service
+): Promise<Object> {
+  try {
+    const postId = get(req, "params.postId");
+    const post = await findPost({ postId }); // get the post from the findPost service
 
-  if (!post) {
-    return res.sendStatus(404).json({ message: "Post not found" });
+    if (!post) {
+      return res.sendStatus(404).json({ message: "Post not found" });
+    }
+    return res.status(200).json(post);
+  } catch (error) {
+    log.info(error);
+    return res.status(500).send(error);
   }
-  return res.status(200).json(post);
 }
 
 /**
@@ -89,11 +103,16 @@ export async function getPostHandler(
 export async function getAllPostsHandler(
   req: Request,
   res: Response
-): Promise<Object> {
-  const userId = get(req, "user._id");
+): Promise<Object | null> {
+  try {
+    const userId = get(req, "user._id");
 
-  const posts = findAllPost({ user: userId }); // get the posts from the findAllPost service
-  return res.send(posts);
+    const posts = await findAllPost({ user: userId }); // get the posts from the findAllPost service
+    return res.send(posts);
+  } catch (error) {
+    log.info(error);
+    return res.status(500).send(error);
+  }
 }
 
 /**
@@ -107,23 +126,28 @@ export async function getAllPostsHandler(
 export async function deletePostHandler(
   req: Request,
   res: Response
-): Promise<Object> {
-  const userId = get(req, "user._id");
-  const postId = get(req, "params.postId");
+): Promise<Object | null> {
+  try {
+    const userId = get(req, "user._id");
+    const postId = get(req, "params.postId");
 
-  const post: any = findPost({ postId });
+    const post: any = await findPost({ postId });
 
-  if (!post) {
-    return res.sendStatus(404).json({ message: "Post not found" });
+    if (!post) {
+      return res.sendStatus(404).json({ message: "Post not found" });
+    }
+
+    if (post.user !== userId) {
+      return res
+        .sendStatus(401)
+        .json({ message: "You are not the author of this post" });
+    } // check if the user is the author of the post
+
+    deletePost({ postId }); // delete the post
+
+    return res.sendStatus(200).json({ message: "Post deleted" });
+  } catch (error) {
+    log.info(error);
+    return res.status(500).send(error);
   }
-
-  if (String(post.user) !== String(userId)) {
-    return res
-      .sendStatus(401)
-      .json({ message: "You are not the author of this post" });
-  } // check if the user is the author of the post
-
-  deletePost({ postId }); // delete the post
-
-  return res.sendStatus(200).json({ message: "Post deleted" });
 }

@@ -5,13 +5,16 @@
 # Node Api using TypeScript || WiredCraft test assignment
 
 - This demonstrate a simple crud operation
+
 - I used sessions and refresh tokens authentication
 -
 
 dependencies
+
 yarn add express yup config cors express mongoose pino pino-pretty dayjs bcrypt jsonwebtoken lodash nanoid
 
 dev-dependencies
+
 yarn add @types/body-parser @types/config @types/cors @types/express @types/node @types/yup @types/pino @types/mongoose @types/bcrypt @types/jsonwebtoken @types/lodash @types/nanoid ts-node typescript -D
 
 Install the dependencies
@@ -57,7 +60,8 @@ How to run App:
 4. create/update/delete posts
 5. follow and unfollow users
 6. delete session [signout/logout]
-7. Oauth signup with github account 8. Short video demo
+7. Oauth signup with github account
+8. Short video demo
 
 ## Validate
 

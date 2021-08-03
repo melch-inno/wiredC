@@ -6,14 +6,23 @@ import {
 } from "mongoose";
 import { Post, PostDocument } from "../model";
 
-export function createPost(input: DocumentDefinition<PostDocument>): any {
+interface PostItem {
+  _id: string;
+  title: string;
+  body: string;
+  user: string;
+}
+
+export async function createPost(
+  input: DocumentDefinition<PostDocument>
+): Promise<PostDocument | Object | null> {
   return Post.create(input);
 }
 
 export async function findPost(
   query: FilterQuery<PostDocument>,
   options: QueryOptions = { lean: true }
-): Promise<any> {
+): Promise<PostDocument | Object | null> {
   return await Post.findOne(query, {}, options);
 }
 
@@ -21,7 +30,7 @@ export async function findPost(
 export async function findAllPost(
   query: FilterQuery<PostDocument>,
   options: QueryOptions = { lean: true }
-): Promise<any> {
+): Promise<PostDocument | Object | null> {
   return await Post.find(query, {}, options);
 }
 
@@ -34,6 +43,8 @@ export function findAndUpdate(
   return Post.findOneAndUpdate(query, update, options);
 }
 
-export function deletePost(query: FilterQuery<PostDocument>): any {
+export function deletePost(
+  query: FilterQuery<PostDocument>
+): PostDocument | Object | null {
   return Post.findOneAndRemove(query);
 }
