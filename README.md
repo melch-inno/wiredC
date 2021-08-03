@@ -2,27 +2,25 @@
   <a href="https://github.com/melch-inno/wiredC/actions"><img alt="typescript-action status" src="https://github.com/melch-inno/wiredC/actions/workflows/test.yml/badge.svg"></a>
 </p>
 
-&& npm run lint
+# Node Api using TypeScript || WiredCraft test assignment
 
-# Create a JavaScript Action using TypeScript
+- This demonstrate a simple crud operation
+- I used sessions and refresh tokens authentication
+-
 
-Use this template to bootstrap the creation of a TypeScript action.:rocket:
+dependencies
+yarn add express yup config cors express mongoose pino pino-pretty dayjs bcrypt jsonwebtoken lodash nanoid
 
-This template includes compilation support, tests, a validation workflow, publishing, and versioning guidance.
-
-If you are new, there's also a simpler introduction. See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
-
-## Create an action from this template
-
-Click the `Use this Template` and provide the new repo details for your action
-
-## Code in Main
-
-> First, you'll need to have a reasonably modern version of `node` handy. This won't work with versions older than 9, for instance.
+dev-dependencies
+yarn add @types/body-parser @types/config @types/cors @types/express @types/node @types/yup @types/pino @types/mongoose @types/bcrypt @types/jsonwebtoken @types/lodash @types/nanoid ts-node typescript -D
 
 Install the dependencies
 
 ```bash
+$ yarn
+
+  or
+
 $ npm install
 ```
 
@@ -45,54 +43,21 @@ $ npm test
 ...
 ```
 
-## Change action.yml
+How to run App:
+✓ After install the dependencis,
+✓ run yarn dev
+✓ Use postman to test the api
+✓ The project has "WiredCraft.postman_collection.json" file in the root folder
+✓ It can be imported into postman for quick setting
+✓ In brief:
 
-The action.yml contains defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-import * as core from '@actions/core';
-...
-
-async function run() {
-  try {
-      ...
-  }
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Publish to a distribution branch
-
-Actions are run from GitHub repos so we will checkin the packed dist folder.
-
-Then run [ncc](https://github.com/zeit/ncc) and push the results:
-
-```bash
-$ npm run package
-$ git add dist
-$ git commit -a -m "prod dependencies"
-$ git push origin releases/v1
-```
-
-Note: We recommend using the `--license` option for ncc, which will create a license file for all of the production node modules used in your project.
-
-Your action is now published! :rocket:
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
+1. signup using the signup paramenters
+2. create a session / signin 3. update user
+3. delete user [ user isDeleted is set to true]
+4. create/update/delete posts
+5. follow and unfollow users
+6. delete session [signout/logout]
+7. Oauth signup with github account 8. Short video demo
 
 ## Validate
 
@@ -104,11 +69,12 @@ with:
   milliseconds: 1000
 ```
 
-See the [actions tab](https://github.com/actions/typescript-action/actions) for runs of this action! :rocket:
+## Testing lint: use "yarn all" to run below test in the app
 
-## Usage:
+"npm run build && npm run format && npm run lint && npm run package && npm test"
 
-After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and latest V1 action
+## Testing lint:
 
+to reference the stable and latest V1 action
 
-&& npm run lint 
+npm run lint
