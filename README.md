@@ -83,8 +83,9 @@ to reference the stable and latest V1 action
 
 npm run lint
 
-![3-load-test](Static/Images/Screen Shot 2021-08-03 at 6.42.29 PM.png)
-![3-load-test](Static/Images/Screen Shot 2021-08-03 at 6.42.29 PM.png)
-![3-load-test](Static/Images/Screen Shot 2021-08-03 at 6.42.29 PM.png)
-![3-load-test](Static/Images/Screen Shot 2021-08-03 at 6.42.29 PM.png)
-![3-load-test](Static/Images/Screen Shot 2021-08-03 at 6.42.29 PM.png)
+![3-load-test](screenshots/Screen Shot 2021-08-03 at 6.42.29 PM.png)
+
+![3-load-test](screenshots/Screen Shot 2021-08-03 at 6.42.29 PM.png)
+![3-load-test](screenshots/Screen Shot 2021-08-03 at 6.42.29 PM.png)
+![3-load-test](screenshots/Screen Shot 2021-08-03 at 6.42.29 PM.png)
+![3-load-test](screenshots/Screen Shot 2021-08-03 at 6.42.29 PM.png)
