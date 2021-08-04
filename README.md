@@ -1,6 +1,6 @@
-<p align="center">
+<!-- <p align="center">
   <a href="https://github.com/melch-inno/wiredC/actions"><img alt="typescript-action status" src="https://github.com/melch-inno/wiredC/actions/workflows/test.yml/badge.svg"></a>
-</p>
+</p> -->
 
 # Node Api using TypeScript || WiredCraft test assignment
 
