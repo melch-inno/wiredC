@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import config from "config";
 import log from "./logger";
 import connect from "./db/connect";
@@ -10,6 +11,7 @@ const host: string = config.get("host");
 
 const app = express();
 app.use(deserializeUser);
+app.use(cors());
 
 app.use(express.static("static"));
 app.use(express.json());

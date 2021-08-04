@@ -3,7 +3,10 @@ body {
   font-family: Roboto;
   overflow: hidden;
 }
-
+.spinner {
+  display: flex;
+  margin-bottom: 200px;
+}
 .app {
   height: 700px;
   width: 300px;
@@ -64,8 +67,6 @@ body {
   transition: 0.5s;
 }
 
-
-
 form {
   width: 100%;
   margin: auto;
@@ -110,6 +111,12 @@ input {
 .sign-up.hidden {
   visibility: hidden;
   opacity: 0;
+}
+.image {
+  width: 40px;
+  height: 40px;
+  margin: auto;
+  display: inline-block;
 }
 
 .sign-in {

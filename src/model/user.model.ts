@@ -11,10 +11,7 @@ export interface UserDocument extends mongoose.Document {
     type: Boolean;
     default: false;
   };
-  confirmationCode: {
-    type: String;
-    unique: true;
-  };
+
   dob: Date;
   address: object;
   description: string;
@@ -30,7 +27,6 @@ const UserSchema = new mongoose.Schema(
     name: { type: String, required: true },
     password: { type: String, required: true },
     activationStatus: { type: Boolean, default: false },
-    confirmationCode: { type: String, unique: true },
     dob: { type: Date, required: true },
     address: { type: Object, required: true },
     description: { type: String, required: false },

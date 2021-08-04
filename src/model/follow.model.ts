@@ -2,27 +2,24 @@ import mongoose from "mongoose";
 import { UserDocument } from ".";
 
 export interface FollowDocument extends mongoose.Document {
-  readonly user: UserDocument["_id"];
-  followers: mongoose.Schema.Types.ObjectId;
-  following: mongoose.Schema.Types.ObjectId;
+  user: UserDocument["_id"];
+  followers: String;
+  following: String;
 }
 
 const FollowSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
     },
     followers: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        default: [],
+        type: String,
       },
     ],
     following: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        default: [],
+        type: String,
       },
     ],
   },

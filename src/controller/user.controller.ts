@@ -31,6 +31,8 @@ export async function createUserHandler(
   try {
     const checkUser: any = await findUser({ email: req.body.email });
 
+    log.info(req.body);
+
     if (checkUser && !checkUser?.isDeleted) {
       return res.status(409).send("User already exist");
     } else if (checkUser?.isDeleted) {
@@ -60,9 +62,9 @@ export async function confirmationCodeHandler(
 ): Promise<any> {
   try {
     const code = get(req, "params.code");
-    const user: any = await findUser({ confirmationCode: code });
+    const user: any = await findUser({ _id: code });
 
-    if (!user) {
+    if (!user.code === code) {
       return res.status(404).send("User not found");
     } else if (user?.activationStatus) {
       return res.status(409).send("User already activated");
