@@ -31,18 +31,16 @@ export async function createUserHandler(
   try {
     const checkUser: any = await findUser({ email: req.body.email });
 
-    log.info(req.body);
-
     if (checkUser && !checkUser?.isDeleted) {
       return res.status(409).send("User already exist");
     } else if (checkUser?.isDeleted) {
       return res
         .status(409)
-        .json({ message: "User is deleted", reactivate: "true/false" });
+        .json({ message: `"User is deleted", "reactivate": "true/false"` });
+    } else {
+      const user = await createUser(req.body);
+      return res.send(omit(user, "password"));
     }
-
-    const user = await createUser(req.body);
-    return res.send(omit(user, "password"));
   } catch (e) {
     log.error(e);
     return res.status(409).send(e.message);
@@ -90,10 +88,11 @@ export async function getUserHandler(
 ): Promise<any> {
   try {
     const user: any = await findUser({ _id: req.params.userId });
-    if (!user || user.isDeleted === true) {
+    if (isEmpty(user) || user.isDeleted === true) {
       return res.status(404).json({ message: "User not found" });
+    } else {
+      return res.send(omit(user, "password"));
     }
-    return res.send(omit(user, "password"));
   } catch (err) {
     log.error(err);
     return res.status(404).json({ message: err });

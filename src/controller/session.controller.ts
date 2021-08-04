@@ -29,7 +29,7 @@ export async function oauthHandler(req: Request, res: Response): Promise<void> {
     );
   } catch (error) {
     log.info(error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
 
@@ -50,7 +50,10 @@ export async function createUserSessionHandler(
     const user = await validatePassword(req.body);
 
     if (!user) {
-      return res.status(401).send("Invalid username or password");
+      return res.status(401).json("Invalid username or password");
+    }
+    if (user.isDeleted) {
+      return res.status(404).json("User not found");
     }
 
     // Create a session
@@ -68,10 +71,10 @@ export async function createUserSessionHandler(
     });
 
     // send refresh & access token back
-    return res.send({ accessToken, refreshToken });
+    return res.status(200).json({ accessToken, refreshToken });
   } catch (error) {
     log.error(error);
-    return res.status(500).send(error);
+    return res.status(500).json({ message: error });
   }
 }
 
@@ -84,10 +87,10 @@ export async function invalidateUserSessionHandler(
 
     await updateSession({ _id: sessionId }, { valid: false });
 
-    return res.sendStatus(200);
+    return res.status(200).json({ message: "ok" });
   } catch (error) {
     log.info(error);
-    return res.status(500).send(error);
+    return res.status(500).json(error);
   }
 }
 
@@ -96,18 +99,12 @@ export async function getUserSessionsHandler(
   res: Response
 ): Promise<Object> {
   try {
-    const user = get(req, "user");
     const userId = get(req, "user._id");
 
-    if (user.isDeleted === false) {
-      const sessions = await findSessions({ user: userId, valid: true });
-
-      return res.send(sessions);
-    } else {
-      return res.status(404).json({ message: "user not found" });
-    }
+    const sessions = await findSessions({ user: userId, valid: true });
+    return res.send(sessions);
   } catch (error) {
     log.info(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: error });
   }
 }

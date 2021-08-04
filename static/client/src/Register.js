@@ -85,6 +85,7 @@ function App() {
                         setRegistration(true);
                         alert.show("Registration successful, you can login");
                     } else if (response.status === 409) {
+                        console.log(response);
                         alert.error("Email already exists");
                     } else {
                         alert.error("Something went wrong");
@@ -92,7 +93,11 @@ function App() {
                 })
                 .catch(function (response) {
                     //handle error
-                    console.log(response);
+                    if (response.status === 409) {
+                        alert.error("Email already exists");
+                    }
+                    alert.error("User already exist");
+                    console.log(response.status);
                 });
         }
     }

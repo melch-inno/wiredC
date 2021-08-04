@@ -83,11 +83,11 @@ export async function getPostHandler(
   try {
     const postId = get(req, "params.postId");
     const post = await findPost({ postId }); // get the post from the findPost service
-
     if (!post) {
       return res.sendStatus(404).json({ message: "Post not found" });
+    } else {
+      return res.status(200).json(post);
     }
-    return res.status(200).json(post);
   } catch (error) {
     log.info(error);
     return res.status(500).send(error);
@@ -131,21 +131,19 @@ export async function deletePostHandler(
     const userId = get(req, "user._id");
     const postId = get(req, "params.postId");
 
-    const post: any = await findPost({ postId });
+    const post = await findPost({ postId });
+    log.info(userId);
+    log.info(post);
 
     if (!post) {
-      return res.sendStatus(404).json({ message: "Post not found" });
-    }
-
-    if (post.user !== userId) {
+      return res.status(404).json({ message: "Post not found" });
+    } else if (post !== userId) {
       return res
-        .sendStatus(401)
+        .status(401)
         .json({ message: "You are not the author of this post" });
-    } // check if the user is the author of the post
-    else {
+    } else {
       deletePost({ postId }); // delete the post
-
-      return res.sendStatus(200).json({ message: "Post deleted" });
+      return res.status(200).json({ message: "Post deleted" });
     }
   } catch (error) {
     log.info(error);

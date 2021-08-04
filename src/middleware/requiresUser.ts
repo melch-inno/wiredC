@@ -10,7 +10,7 @@ const requiresUser = async (
   try {
     const user = get(req, "user");
 
-    if (!user) {
+    if (!user || user.isDeleted === true) {
       return res.sendStatus(403);
     }
 

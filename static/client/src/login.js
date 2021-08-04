@@ -71,7 +71,9 @@ function Login() {
                             };
                             localStorage.setItem('tokens', JSON.stringify(tokens));
                             history.push("/home");
-                        } else if (response.status === 400 || response.status === 401) {
+                        } else if (response.status === 404) {
+                            alert.error("User not found");
+                        } else if (response.status === 401) {
                             alert.error("Invalid username or password");
                         } else {
                             alert.error("Something went wrong, check your details and try again ");

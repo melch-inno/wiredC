@@ -13,10 +13,9 @@ export async function createPost(
 }
 
 export async function findPost(
-  query: FilterQuery<PostDocument>,
-  options: QueryOptions = { lean: true }
-): Promise<PostDocument | Object | null> {
-  return await Post.findOne(query, {}, options);
+  query: FilterQuery<PostDocument>
+): Promise<Object> {
+  return Post.findOne(query) as Object;
 }
 
 //find All Post
