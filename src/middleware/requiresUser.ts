@@ -6,7 +6,7 @@ const requiresUser = async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<any> => {
+): Promise<void | Object> => {
   try {
     const user = get(req, "user");
 

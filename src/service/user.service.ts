@@ -52,7 +52,7 @@ export async function ConfirmationCode(
  */
 export async function findUser(
   query: FilterQuery<UserDocument>
-): Promise<UserDocument | Object> {
+): Promise<UserDocument | any> {
   return User.findOne(query).lean();
 }
 

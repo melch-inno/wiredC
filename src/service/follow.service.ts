@@ -20,13 +20,25 @@ export async function checkFollowing(
   const checkFollow = await Follow.find(query);
   return { data: checkFollow };
 }
-
+/**
+ * @function createFollow
+ * @description a function to create a follow object the first time a user follows another user
+ * @param {string} (following: userId, follower: userId)
+ * @return db.model<UserDocument>("Follow").create(id);
+ * @throws {Error}
+ */
 export async function createFollow(
   input: DocumentDefinition<FollowDocument>
 ): Promise<Object> {
   return await Follow.create(input);
 }
-
+/**
+ * @function followUser
+ * @description a function update a following relationship between two users
+ * @param {string} (following: userId, follower: userId)
+ * @return db.model<UserDocument>("Follow").create(id);
+ * @throws {Error}
+ */
 export async function followUser(
   query: FilterQuery<FollowDocument>,
   update: UpdateQuery<FollowDocument>,
@@ -35,6 +47,13 @@ export async function followUser(
   return await Follow.findOneAndUpdate(query, update, options);
 }
 
+/**
+ * @function unfollowUser
+ * @description a function update unfollowing relationship between two users
+ * @param {string} (following: userId, follower: userId)
+ * @return db.model<UserDocument>("Follow").create(id);
+ * @throws {Error}
+ */
 export async function unfollowUser(
   query: FilterQuery<FollowDocument>,
   options: QueryOptions

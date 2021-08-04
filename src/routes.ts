@@ -86,7 +86,7 @@ export default function Route(app: Express): void {
   // delete and reactivate user
   app.put(
     "/api/user/delete/:userId",
-    checkRole,
+    requiresUser,
     deleteAndReactivateUserHandler
   );
 

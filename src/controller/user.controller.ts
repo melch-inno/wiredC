@@ -90,15 +90,13 @@ export async function getUserHandler(
 ): Promise<any> {
   try {
     const user: any = await findUser({ _id: req.params.userId });
-
-    if (!user || user?.isDeleted) {
-      return res.status(404).send("User not found");
+    if (!user || user.isDeleted === true) {
+      return res.status(404).json({ message: "User not found" });
     }
-
     return res.send(omit(user, "password"));
-  } catch (e) {
-    log.error(e);
-    return res.status(404).send(e.message);
+  } catch (err) {
+    log.error(err);
+    return res.status(404).json({ message: err });
   }
 }
 
@@ -120,7 +118,7 @@ export async function updateUserHandler(
     // check if the user to be updated exist
     const user: any = await findUser({ _id: userId });
     if (!user || user?.isDeleted) {
-      return res.status(404).send("User not found");
+      return res.status(404).json({ message: "User not found" });
     }
 
     // update the user
@@ -128,9 +126,9 @@ export async function updateUserHandler(
       new: true,
     });
     return res.send(omit(updatedUser, "password"));
-  } catch (e) {
-    log.error(e);
-    return res.status(404).send(e.message);
+  } catch (err) {
+    log.error(err);
+    return res.status(404).json({ message: err });
   }
 }
 /**
@@ -144,104 +142,114 @@ export async function followUserHandler(
   req: Request,
   res: Response
 ): Promise<Object | any> {
-  const user: String = await get(req, "user._id");
+  const userId: String = await get(req, "user._id");
   const followThisId = get(req, "body.following");
-  log.info(followThisId);
 
   try {
-    if (user === followThisId) {
+    if (userId === followThisId) {
       return res.status(400).json({ message: "You cannot follow yourself" });
     }
     const CurrentUserFollow = await checkFollowing({ user: followThisId });
+    const otherUserFollowObj = await checkFollowing({ user: userId });
+    log.info(CurrentUserFollow.data[0].followers);
 
-    log.info(`user ${user} `);
-
-    if (isEmpty(CurrentUserFollow.data)) {
+    if (isEmpty(CurrentUserFollow)) {
       await Follow.create({
-        user,
+        user: userId,
         followers: [],
         following: followThisId,
       })
         .then(
           () => {
-            Follow.create({
-              user: followThisId,
-              followers: user,
-              following: [],
-            });
-            res.sendStatus(200);
+            if (isEmpty(otherUserFollowObj)) {
+              Follow.create({
+                user: followThisId,
+                followers: userId,
+                following: [],
+              });
+            } else {
+              Follow.findOneAndUpdate(
+                { user: followThisId },
+                {
+                  $push: { following: userId },
+                },
+                { multi: true }
+              );
+            }
+            res.status(200).json({ message: "Followed successfully" });
           },
           (err) => {
             log.error(err);
-            return res.status(500).send(err);
+            return res.status(500).json({ message: err });
           }
         )
         .catch((e) => {
           log.error(e);
         });
     } else {
-      let checkFollow = "false";
-      // eslint-disable-next-line github/array-foreach
-      CurrentUserFollow.data[0].followers.forEach((item: any) => {
-        if (String(item) === String(user)) {
-          checkFollow = "true";
-          return true;
-        }
-      });
-
-      if (checkFollow === "false") {
+      if (!CurrentUserFollow.data[0].followers.includes(userId)) {
         Follow.findOneAndUpdate(
-          { user },
+          { user: userId },
           {
             $push: { following: followThisId },
           },
-          { new: true }
+          { multi: true }
         )
           .then(
             () => {
-              Follow.findOneAndUpdate(
-                { user: followThisId },
-                {
-                  $push: { followers: user },
-                },
-                { new: true }
-              );
-              res.sendStatus(200);
+              if (isEmpty(otherUserFollowObj)) {
+                Follow.create({
+                  user: followThisId,
+                  followers: userId,
+                  following: [],
+                });
+              } else {
+                Follow.findOneAndUpdate(
+                  { user: followThisId },
+                  {
+                    $push: { followers: userId },
+                  },
+                  { multi: true }
+                );
+              }
+              res.sendStatus(200).json({ message: "Followed successfully" });
             },
             (err) => {
               log.error(err);
-              return res.status(500).send(err);
+              return res.status(500).json({ message: err });
             }
           )
-          .catch((e) => {
-            log.error(e);
+          .catch((err) => {
+            log.error(err);
+            return res.status(500).json({ message: err });
           });
       } else {
         Follow.findOneAndUpdate(
-          { user },
+          { userId },
           {
             $pull: { following: followThisId },
           },
-          { new: true }
+          { multi: true }
         )
           .then(
             () => {
               Follow.findOneAndUpdate(
                 { user: followThisId },
                 {
-                  $pull: { followers: user },
+                  $pull: { followers: userId },
                 },
-                { new: true }
+                { multi: true }
               );
               res.sendStatus(200);
             },
             (err) => {
               log.error(err);
-              return res.status(500).send(err);
+              return res.status(500).json({ message: err });
             }
           )
-          .catch((e) => {
-            log.error(e);
+          .catch((err) => {
+            log.error(err);
+            return res.status(500).json({ message: err });
           });
       }
     }
@@ -264,18 +272,29 @@ export async function deleteAndReactivateUserHandler(
   res: Response
 ): Promise<any> {
   try {
+    const currentUser = get(req, "user._id");
     const reqObject = req.body;
 
-    const user: any = await findUser({ _id: reqObject.userId });
+    log.info(currentUser);
+
+    const user: any = await findUser({ _id: req.body.userId });
 
     if (!user || user?.isDeleted) {
       return res.status(404).send("User not found");
     }
 
-    await deleteAndReactivate({ _id: reqObject.userId }, reqObject, {
-      new: true,
-    });
-    return res.sendStatus(200);
+    if (currentUser === req.body.userId) {
+      await deleteAndReactivate(
+        { _id: reqObject.userId },
+        { isDeleted: reqObject.isDeleted },
+        {
+          new: true,
+        }
+      );
+      return res.sendStatus(200);
+    } else {
+      return res.status(400).send("You are not authorized to delete this user");
+    }
   } catch (e) {
     log.error(e);
     return res.status(404).send(e.message);

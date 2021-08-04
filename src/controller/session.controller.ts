@@ -96,11 +96,16 @@ export async function getUserSessionsHandler(
   res: Response
 ): Promise<Object> {
   try {
+    const user = get(req, "user");
     const userId = get(req, "user._id");
 
-    const sessions = await findSessions({ user: userId, valid: true });
+    if (user.isDeleted === false) {
+      const sessions = await findSessions({ user: userId, valid: true });
 
-    return res.send(sessions);
+      return res.send(sessions);
+    } else {
+      return res.status(404).json({ message: "user not found" });
+    }
   } catch (error) {
     log.info(error);
     return res.sendStatus(500);
