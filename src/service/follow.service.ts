@@ -6,6 +6,11 @@ import {
 } from "mongoose";
 import { Follow, FollowDocument } from "../model";
 
+interface FollowRelations {
+  userId: string;
+  followThisId: string;
+}
+
 /**
  * @function findUser
  * @description Find user by id
@@ -20,18 +25,7 @@ export async function checkFollowing(
   const checkFollow = await Follow.find(query);
   return { data: checkFollow };
 }
-/**
- * @function createFollow
- * @description a function to create a follow object the first time a user follows another user
- * @param {string} (following: userId, follower: userId)
- * @return db.model<UserDocument>("Follow").create(id);
- * @throws {Error}
- */
-export async function createFollow(
-  input: DocumentDefinition<FollowDocument>
-): Promise<Object> {
-  return await Follow.create(input);
-}
+
 /**
  * @function followUser
  * @description a function update a following relationship between two users
@@ -39,12 +33,24 @@ export async function createFollow(
  * @return db.model<UserDocument>("Follow").create(id);
  * @throws {Error}
  */
-export async function followUser(
-  query: FilterQuery<FollowDocument>,
-  update: UpdateQuery<FollowDocument>,
-  options: QueryOptions
-): Promise<FollowDocument | Object | null> {
-  return await Follow.findOneAndUpdate(query, update, options);
+export async function followUser({
+  userId,
+  followThisId,
+}: FollowRelations): Promise<void> {
+  await Follow.findOneAndUpdate(
+    { user: userId },
+    {
+      $push: { following: followThisId },
+    },
+    { new: true }
+  );
+  await Follow.findOneAndUpdate(
+    { user: followThisId },
+    {
+      $push: { followers: userId },
+    },
+    { new: true }
+  );
 }
 
 /**
@@ -54,9 +60,22 @@ export async function followUser(
  * @return db.model<UserDocument>("Follow").create(id);
  * @throws {Error}
  */
-export async function unfollowUser(
-  query: FilterQuery<FollowDocument>,
-  options: QueryOptions
-): Promise<Object> {
-  return Follow.findById(query, options).lean();
+export async function unfollowUser({
+  userId,
+  followThisId,
+}: FollowRelations): Promise<void> {
+  await Follow.findOneAndUpdate(
+    { user: userId },
+    {
+      $pull: { following: followThisId },
+    },
+    { new: true }
+  );
+  await Follow.findOneAndUpdate(
+    { user: followThisId },
+    {
+      $pull: { followers: userId },
+    },
+    { new: true }
+  );
 }

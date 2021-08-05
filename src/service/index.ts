@@ -7,12 +7,7 @@ export {
   deleteAndReactivate,
   validatePassword,
 } from "./user.service";
-export {
-  createFollow,
-  followUser,
-  unfollowUser,
-  checkFollowing,
-} from "./follow.service";
+export { followUser, unfollowUser, checkFollowing } from "./follow.service";
 export {
   createSession,
   createAccessToken,

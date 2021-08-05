@@ -104,9 +104,11 @@ npm run lint
 
 ![3-load-test](./screenshots/3.png)
 
+![3-load-test](./screenshots/5.png)
+
 ## Follow and unfollow
 
-![3-load-test](./screenshots/5.png)
+![3-load-test](./screenshots/3_1.png)
 
 ![3-load-test](./screenshots/6.png)
 ![3-load-test](./screenshots/7.png)

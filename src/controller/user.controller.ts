@@ -6,11 +6,10 @@ import {
   createUser,
   ConfirmationCode,
   findUser,
+  followUser,
+  unfollowUser,
   findUsersWithGeolocation,
   deleteAndReactivate,
-  // createFollow,
-  // followUser,
-  // unfollowUser,
   checkFollowing,
   updateUser,
 } from "../service";
@@ -180,36 +179,11 @@ export async function followAndUnfollowUserHandler(
     const CurrentUserFollow = await checkFollowing({ user: userId });
 
     if (!CurrentUserFollow.data[0].following.includes(followThisId)) {
-      await Follow.findOneAndUpdate(
-        { user: userId },
-        {
-          $push: { following: followThisId },
-        },
-        { new: true }
-      );
-      await Follow.findOneAndUpdate(
-        { user: followThisId },
-        {
-          $push: { followers: userId },
-        },
-        { new: true }
-      );
+      await followUser({ userId, followThisId });
+
       res.status(200).json({ message: "Followed successfully" });
     } else {
-      await Follow.findOneAndUpdate(
-        { user: userId },
-        {
-          $pull: { following: followThisId },
-        },
-        { new: true }
-      );
-      await Follow.findOneAndUpdate(
-        { user: followThisId },
-        {
-          $pull: { followers: userId },
-        },
-        { new: true }
-      );
+      await unfollowUser({ userId, followThisId });
       res.status(200).json({ message: "unfollowed successfully" });
     }
   } catch (err: any) {
