@@ -1,9 +1,4 @@
-import {
-  DocumentDefinition,
-  FilterQuery,
-  UpdateQuery,
-  QueryOptions,
-} from "mongoose";
+import { FilterQuery } from "mongoose";
 import { Follow, FollowDocument } from "../model";
 
 interface FollowRelations {
