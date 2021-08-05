@@ -117,6 +117,14 @@ npm run lint
 ![3-load-test](./screenshots/9.png)
 ![3-load-test](./screenshots/10.png)
 
+## Run react frontend to test
+
+```bash
+1. cd static
+2. yarn
+3. run `yarn start`
+```
+
 ![3-load-test](./screenshots/11_1.png)
 ![3-load-test](./screenshots/11_2.png)
 ![3-load-test](./screenshots/11_3.png)
