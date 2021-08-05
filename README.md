@@ -5,19 +5,19 @@
 # Node Api using TypeScript || WiredCraft test assignment
 
 - This demonstrate a simple crud operation
-
 - I used sessions and refresh tokens authentication
 -
 
-dependencies
-
+## dependencies
+```bash
 yarn add express yup config cors express mongoose pino pino-pretty dayjs bcrypt jsonwebtoken lodash nanoid
-
-dev-dependencies
-
+```
+## dev-dependencies
+```bash
 yarn add @types/body-parser @types/config @types/cors @types/express @types/node @types/yup @types/pino @types/mongoose @types/bcrypt @types/jsonwebtoken @types/lodash @types/nanoid ts-node typescript -D
+```
 
-Install the dependencies
+## Install the dependencies
 
 ```bash
 $ yarn
@@ -73,15 +73,20 @@ with:
   milliseconds: 1000
 ```
 
-## Testing lint: use "yarn all" to run below test in the app
+## Testing lint: use `bash yarn all` to run below test in the app
 
+```bash
 "npm run build && npm run format && npm run lint && npm run package && npm test"
+```
 
 ## Testing lint:
 
 to reference the stable and latest V1 action
-
+```bash
 npm run lint
+```
+## Screenshots of the various testing stages
+
 
 ![3-load-test](./screenshots/1_1.png)
 ![3-load-test](./screenshots/2.png)
