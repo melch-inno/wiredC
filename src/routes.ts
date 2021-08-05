@@ -38,12 +38,12 @@ export default function Route(app: Express): void {
   );
   // Static page to display the login page  with gihub auth
   app.get("/", (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, "/static/index.html"));
+    res.sendFile(path.join(__dirname, "/static/github/index.html"));
   });
 
   // Static page to display the login page  with gihub auth
   app.get("/register/", (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, "/static/index.html"));
+    res.sendFile(path.join(__dirname, "/static/github/index.html"));
   });
 
   // OAuthentication route
