@@ -161,7 +161,7 @@ export async function updateUserHandler(
 }
 /**
  * @function followUserHandler
- * @description follow user handler
+ * @description follow user handler, follow and unfollow toggle function
  * @param {Request} req - Express request object
  * @param {Response} res - Express response object
  * @throws {Error
@@ -171,8 +171,8 @@ export async function followUserHandler(
   res: Response
 ): Promise<Object | any> {
   const userId = await get(req, "user._id");
-  const followThisId = get(req, "body.following");
-
+  const followThisId = req.body.following;
+  log.info(userId);
   try {
     if (userId === followThisId) {
       return res.status(400).json({ message: "You cannot follow yourself" });
@@ -180,49 +180,37 @@ export async function followUserHandler(
     const CurrentUserFollow = await checkFollowing({ user: userId });
 
     if (!CurrentUserFollow.data[0].following.includes(followThisId)) {
-      Follow.findOneAndUpdate(
+      await Follow.findOneAndUpdate(
         { user: userId },
         {
           $push: { following: followThisId },
         },
-        { multi: true }
-      ).then(() => {
-        Follow.findOneAndUpdate(
-          { user: followThisId },
-          {
-            $push: { followers: userId },
-          },
-          { multi: true }
-        );
-        res.status(200).json({ message: "Followed successfully" });
-      });
-      (err: any) => {
-        log.error(err);
-        return res.status(500).json({ message: err });
-      };
+        { new: true }
+      );
+      await Follow.findOneAndUpdate(
+        { user: followThisId },
+        {
+          $push: { followers: userId },
+        },
+        { new: true }
+      );
+      res.status(200).json({ message: "Followed successfully" });
     } else {
-      Follow.findOneAndUpdate(
+      await Follow.findOneAndUpdate(
         { user: userId },
         {
           $pull: { following: followThisId },
         },
-        { multi: true }
-      ).then(
-        () => {
-          Follow.findOneAndUpdate(
-            { user: followThisId },
-            {
-              $pull: { followers: userId },
-            },
-            { multi: true }
-          );
-        },
-        (err) => {
-          log.error(err);
-          return res.status(500).json({ message: err });
-        }
+        { new: true }
       );
-      res.sendStatus(200).json({ message: "unfollowed successfully" });
+      await Follow.findOneAndUpdate(
+        { user: followThisId },
+        {
+          $pull: { followers: userId },
+        },
+        { new: true }
+      );
+      res.status(200).json({ message: "unfollowed successfully" });
     }
   } catch (err: any) {
     log.error(err);
