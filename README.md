@@ -90,12 +90,24 @@ npm run lint
 
 ## Screenshots of the various testing stages
 
-![3-load-test](./screenshots/1_1.png)
+## Create User
+
+![3-load-test](./screenshots/1_3.png)
+
+## Login (create a session)
+
 ![3-load-test](./screenshots/2.png)
+
 ![3-load-test](./screenshots/2_1.png)
+
+## get a user and set userId
+
 ![3-load-test](./screenshots/3.png)
-![3-load-test](./screenshots/4.png)
+
+## Follow and unfollow
+
 ![3-load-test](./screenshots/5.png)
+
 ![3-load-test](./screenshots/6.png)
 ![3-load-test](./screenshots/7.png)
 ![3-load-test](./screenshots/7_1.png)
