@@ -11,13 +11,13 @@ const requiresUser = async (
     const user = get(req, "user");
 
     if (!user || user.isDeleted === true) {
-      return res.sendStatus(403);
+      return res.status(401).json({ message: "Login Required" });
     }
 
     return next();
   } catch (error) {
     log.error(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 

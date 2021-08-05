@@ -2,6 +2,7 @@ export {
   createUser,
   ConfirmationCode,
   findUser,
+  findUsersWithGeolocation,
   updateUser,
   deleteAndReactivate,
   validatePassword,

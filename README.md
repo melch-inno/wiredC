@@ -28,6 +28,13 @@ $ yarn
 $ npm install
 ```
 
+How to configure App:
+✓ After installing the dependencies,
+✓ run yarn dev
+✓ Use postman to test the api
+✓ The project has "WiredCraft.postman_collection.json" file in the root folder
+✓ It can be imported into postman for quick setting
+
 Build the typescript and package it for distribution
 
 ```bash
@@ -46,23 +53,6 @@ $ npm test
 
 ...
 ```
-
-How to run App:
-✓ After installing the dependencies,
-✓ run yarn dev
-✓ Use postman to test the api
-✓ The project has "WiredCraft.postman_collection.json" file in the root folder
-✓ It can be imported into postman for quick setting
-✓ In brief:
-
-1. signup using the signup paramenters
-2. create a session / signin 3. update user
-3. delete user [ user isDeleted is set to true]
-4. create/update/delete posts
-5. follow and unfollow users
-6. delete session [signout/logout]
-7. Oauth signup with github account
-8. Short video demo
 
 ## Validate
 
@@ -87,6 +77,16 @@ to reference the stable and latest V1 action
 ```bash
 npm run lint
 ```
+
+## using the app
+
+1. signup using the signup paramenters
+2. create a session / signin 3. update user
+3. delete user [ user isDeleted is set to true]
+4. create/update/delete posts
+5. follow and unfollow users
+6. delete session [signout/logout]
+7. Oauth signup with github account
 
 ## Screenshots of the various testing stages
 

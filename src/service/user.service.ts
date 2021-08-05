@@ -8,6 +8,11 @@ import { omit } from "lodash";
 import { User, UserDocument } from "../model";
 import log from "../logger";
 
+interface IRequest {
+  latt: number;
+  long: number;
+}
+
 /**
  * @function UserService
  * @description Service for create user CRUD operations
@@ -15,7 +20,7 @@ import log from "../logger";
  */
 export async function createUser(
   input: DocumentDefinition<UserDocument>
-): Promise<Object> {
+): Promise<UserDocument> {
   try {
     return await User.create(input);
   } catch (error) {
@@ -52,8 +57,34 @@ export async function ConfirmationCode(
  */
 export async function findUser(
   query: FilterQuery<UserDocument>
-): Promise<UserDocument | any> {
+): Promise<UserDocument> {
   return User.findOne(query).lean();
+}
+
+/**
+ * @function findUserWithGeolocation
+ * @description Find users by using geolocation
+ * @param {string} (_id: userId)
+ * @return db.model<UserDocument>("User").findOne(id);
+ * @throws {Error}
+ */
+export async function findUsersWithGeolocation({
+  latt,
+  long,
+}: IRequest): Promise<UserDocument[]> {
+  const users = await User.find({
+    location: {
+      $near: {
+        $maxDistance: 15000,
+        $geometry: {
+          type: "Point",
+          coordinates: [long, latt],
+        },
+      },
+    },
+  });
+
+  return users;
 }
 
 /**
@@ -68,13 +99,9 @@ export async function updateUser(
   query: FilterQuery<UserDocument>,
   updateItem: UpdateQuery<UserDocument>,
   options: QueryOptions
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<any> {
-  try {
-    return await User.findByIdAndUpdate(query, updateItem, options);
-  } catch (error) {
-    log.error(error);
-  }
+): Promise<UserDocument | null> {
+  const update = await User.findByIdAndUpdate(query, updateItem, options);
+  return update;
 }
 
 /**

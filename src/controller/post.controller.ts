@@ -50,23 +50,27 @@ export async function updatePostHandler(
     const postId = get(req, "params.postId");
     const update = req.body;
 
-    const post: any = await findPost({ postId }); // get the post
-
-    if (!post.user) {
+    const post = findPost({ postId: "j652yDK0Gr" }); // get the post
+    log.info("ggjhgjhgjhgh", post);
+    if (!post) {
       return res.sendStatus(404);
     }
 
     // check if the user is the author of the post
-    if (String(post.user) !== userId) {
+    if (String(post) !== userId) {
       return res.sendStatus(401);
-    }
+    } else {
+      log.info("ggjhgjhgjhgh", post);
 
-    // call the findAndUpdate service to update the post
-    const updatedPost = await findAndUpdate({ postId }, update, { new: true });
-    return res.status(200).json(updatedPost);
+      // call the findAndUpdate service to update the post
+      const updatedPost = await findAndUpdate({ postId }, update, {
+        new: true,
+      });
+      return res.status(200).json(updatedPost);
+    }
   } catch (error) {
     log.info(error);
-    return res.status(500).send(error);
+    return res.status(500).send(error.message);
   }
 }
 

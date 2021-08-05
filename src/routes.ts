@@ -4,6 +4,7 @@ import {
   createUserHandler,
   confirmationCodeHandler,
   getUserHandler,
+  getUsersByGeolocationHandler,
   updateUserHandler,
   followUserHandler,
   deleteAndReactivateUserHandler,
@@ -20,7 +21,6 @@ import {
 import {
   validateRequest,
   requiresUser,
-  checkRole,
   OAuthHandler,
   OAuthCallbackHandler,
 } from "./middleware";
@@ -67,6 +67,9 @@ export default function Route(app: Express): void {
   // get user
   app.get("/api/user/:userId", requiresUser, getUserHandler);
 
+  // get users by geolocation
+  app.get("/api/geolocation/users", requiresUser, getUsersByGeolocationHandler);
+
   // followUserHandler
   app.put("/api/follow", requiresUser, followUserHandler);
 
@@ -85,7 +88,7 @@ export default function Route(app: Express): void {
 
   // delete and reactivate user
   app.put(
-    "/api/user/delete/:userId",
+    "/api/delete/user/:userId",
     requiresUser,
     deleteAndReactivateUserHandler
   );

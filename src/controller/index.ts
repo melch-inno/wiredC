@@ -7,6 +7,7 @@ export {
   createUserHandler,
   confirmationCodeHandler,
   getUserHandler,
+  getUsersByGeolocationHandler,
   updateUserHandler,
   followUserHandler,
   deleteAndReactivateUserHandler,

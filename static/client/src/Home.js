@@ -123,7 +123,7 @@ function Home() {
         try {
             await axios({
                 method: "put",
-                url: `http://localhost:3001/api/user/delete/${userId}`,
+                url: `http://localhost:3001/api/delete/user/${userId}`,
                 data: {
                     "isDeleted": true,
                     "userId": userId,
@@ -132,7 +132,7 @@ function Home() {
                     "Authorization": `Bearer ${tokens.accessToken}`,
                     'x-refresh': tokens.refreshToken,
                     'Accept': '*/*',
-                    'Access-Control-Allow-Methods': 'GET',
+                    'Access-Control-Allow-Methods': 'PUT',
                     'Content-Type': 'application/json',
                 }
             })

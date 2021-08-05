@@ -6,6 +6,7 @@ import {
   createUser,
   ConfirmationCode,
   findUser,
+  findUsersWithGeolocation,
   deleteAndReactivate,
   // createFollow,
   // followUser,
@@ -35,10 +36,15 @@ export async function createUserHandler(
       return res.status(409).send("User already exist");
     } else if (checkUser?.isDeleted) {
       return res
-        .status(409)
+        .status(404)
         .json({ message: `"User is deleted", "reactivate": "true/false"` });
     } else {
       const user = await createUser(req.body);
+      await Follow.create({
+        user: user._id,
+        followers: [],
+        following: [],
+      });
       return res.send(omit(user, "password"));
     }
   } catch (e) {
@@ -98,6 +104,29 @@ export async function getUserHandler(
     return res.status(404).json({ message: err });
   }
 }
+/**
+ * @function findUserWithGeolocation
+ * @description get users by using geolocation search handler
+ * @param {Request} req
+ * @param {Response} res
+ */
+export async function getUsersByGeolocationHandler(
+  req: Request,
+  res: Response
+): Promise<Object> {
+  try {
+    const { latt, long } = req.body;
+    const user = await findUsersWithGeolocation({ latt, long });
+    if (isEmpty(user)) {
+      return res.status(404).json({ message: "User not found" });
+    } else {
+      return res.send(omit(user, "password"));
+    }
+  } catch (err) {
+    log.error(err);
+    return res.status(404).json({ message: err });
+  }
+}
 
 /**
  * @function updateUserHandler
@@ -127,7 +156,7 @@ export async function updateUserHandler(
     return res.send(omit(updatedUser, "password"));
   } catch (err) {
     log.error(err);
-    return res.status(404).json({ message: err });
+    return res.status(500).json({ message: err });
   }
 }
 /**
@@ -141,120 +170,63 @@ export async function followUserHandler(
   req: Request,
   res: Response
 ): Promise<Object | any> {
-  const userId: String = await get(req, "user._id");
+  const userId = await get(req, "user._id");
   const followThisId = get(req, "body.following");
 
   try {
     if (userId === followThisId) {
       return res.status(400).json({ message: "You cannot follow yourself" });
     }
-    const CurrentUserFollow = await checkFollowing({ user: followThisId });
-    const otherUserFollowObj = await checkFollowing({ user: userId });
-    log.info(CurrentUserFollow.data[0].followers);
+    const CurrentUserFollow = await checkFollowing({ user: userId });
 
-    if (isEmpty(CurrentUserFollow)) {
-      await Follow.create({
-        user: userId,
-        followers: [],
-        following: followThisId,
-      })
-        .then(
-          () => {
-            if (isEmpty(otherUserFollowObj)) {
-              Follow.create({
-                user: followThisId,
-                followers: userId,
-                following: [],
-              });
-            } else {
-              Follow.findOneAndUpdate(
-                { user: followThisId },
-                {
-                  $push: { following: userId },
-                },
-                { multi: true }
-              );
-            }
-            res.status(200).json({ message: "Followed successfully" });
+    if (!CurrentUserFollow.data[0].following.includes(followThisId)) {
+      Follow.findOneAndUpdate(
+        { user: userId },
+        {
+          $push: { following: followThisId },
+        },
+        { multi: true }
+      ).then(() => {
+        Follow.findOneAndUpdate(
+          { user: followThisId },
+          {
+            $push: { followers: userId },
           },
-          (err) => {
-            log.error(err);
-            return res.status(500).json({ message: err });
-          }
-        )
-        .catch((e) => {
-          log.error(e);
-        });
+          { multi: true }
+        );
+        res.status(200).json({ message: "Followed successfully" });
+      });
+      (err: any) => {
+        log.error(err);
+        return res.status(500).json({ message: err });
+      };
     } else {
-      if (!CurrentUserFollow.data[0].followers.includes(userId)) {
-        Follow.findOneAndUpdate(
-          { user: userId },
-          {
-            $push: { following: followThisId },
-          },
-          { multi: true }
-        )
-          .then(
-            () => {
-              if (isEmpty(otherUserFollowObj)) {
-                Follow.create({
-                  user: followThisId,
-                  followers: userId,
-                  following: [],
-                });
-              } else {
-                Follow.findOneAndUpdate(
-                  { user: followThisId },
-                  {
-                    $push: { followers: userId },
-                  },
-                  { multi: true }
-                );
-              }
-              res.sendStatus(200).json({ message: "Followed successfully" });
+      Follow.findOneAndUpdate(
+        { user: userId },
+        {
+          $pull: { following: followThisId },
+        },
+        { multi: true }
+      ).then(
+        () => {
+          Follow.findOneAndUpdate(
+            { user: followThisId },
+            {
+              $pull: { followers: userId },
             },
-            (err) => {
-              log.error(err);
-              return res.status(500).json({ message: err });
-            }
-          )
-          .catch((err) => {
-            log.error(err);
-            return res.status(500).json({ message: err });
-          });
-      } else {
-        Follow.findOneAndUpdate(
-          { userId },
-          {
-            $pull: { following: followThisId },
-          },
-          { multi: true }
-        )
-          .then(
-            () => {
-              Follow.findOneAndUpdate(
-                { user: followThisId },
-                {
-                  $pull: { followers: userId },
-                },
-                { multi: true }
-              );
-              res.sendStatus(200);
-            },
-            (err) => {
-              log.error(err);
-              return res.status(500).json({ message: err });
-            }
-          )
-          .catch((err) => {
-            log.error(err);
-            return res.status(500).json({ message: err });
-          });
-      }
+            { multi: true }
+          );
+        },
+        (err) => {
+          log.error(err);
+          return res.status(500).json({ message: err });
+        }
+      );
+      res.sendStatus(200).json({ message: "unfollowed successfully" });
     }
-  } catch (error) {
-    log.error(error);
-    return res.status(400).json({ message: error });
+  } catch (err: any) {
+    log.error(err);
+    return res.status(500).json({ message: err });
   }
 }
 
@@ -272,20 +244,19 @@ export async function deleteAndReactivateUserHandler(
 ): Promise<any> {
   try {
     const currentUser = get(req, "user._id");
-    const reqObject = req.body;
+    const userId = req.params.userId;
 
-    log.info(currentUser);
-
-    const user: any = await findUser({ _id: req.body.userId });
+    const user: any = await findUser({ _id: userId });
+    log.info(user);
 
     if (!user || user?.isDeleted) {
       return res.status(404).send("User not found");
     }
 
-    if (currentUser === req.body.userId) {
+    if (currentUser === userId) {
       await deleteAndReactivate(
-        { _id: reqObject.userId },
-        { isDeleted: reqObject.isDeleted },
+        { _id: userId },
+        { isDeleted: req.body.isDeleted },
         {
           new: true,
         }

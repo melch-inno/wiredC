@@ -13,7 +13,16 @@ export interface UserDocument extends mongoose.Document {
   };
 
   dob: Date;
-  address: object;
+  address: {
+    type: { type: Object };
+    street: string;
+    city: string;
+    zip: string;
+    location: {
+      type: { type: String };
+      coordinates: [];
+    };
+  };
   description: string;
   isAdmin: boolean;
   isDeleted: boolean;
@@ -28,7 +37,16 @@ const UserSchema = new mongoose.Schema(
     password: { type: String, required: true },
     activationStatus: { type: Boolean, default: false },
     dob: { type: Date, required: true },
-    address: { type: Object, required: true },
+    address: {
+      type: { type: Object },
+      city: { type: String, required: true },
+      street: { type: String, required: true },
+      zip: { type: String, required: true },
+      location: {
+        type: { type: String },
+        coordinates: [],
+      },
+    },
     description: { type: String, required: false },
     isAdmin: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
@@ -63,6 +81,8 @@ UserSchema.methods.comparePassword = async function (
   // eslint-disable-next-line github/no-then
   return bcrypt.compare(candidatePassword, user.password).catch(() => false);
 };
+
+UserSchema.index({ location: "2dsphere" });
 
 const User = mongoose.model<UserDocument>("User", UserSchema);
 
