@@ -162,17 +162,17 @@ export async function updateUserHandler(
 /**
  * @function followUserHandler
  * @description follow user handler, follow and unfollow toggle function
- * @param {Request} req - Express request object
+ * @param {Request} req - Express request object {following: "userId"} the id of the user you want to follow
  * @param {Response} res - Express response object
  * @throws {Error
  */
-export async function followUserHandler(
+export async function followAndUnfollowUserHandler(
   req: Request,
   res: Response
 ): Promise<Object | any> {
   const userId = await get(req, "user._id");
   const followThisId = req.body.following;
-  log.info(userId);
+
   try {
     if (userId === followThisId) {
       return res.status(400).json({ message: "You cannot follow yourself" });

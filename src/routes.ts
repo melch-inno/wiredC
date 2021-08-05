@@ -6,7 +6,7 @@ import {
   getUserHandler,
   getUsersByGeolocationHandler,
   updateUserHandler,
-  followUserHandler,
+  followAndUnfollowUserHandler,
   deleteAndReactivateUserHandler,
   createPostHandler,
   updatePostHandler,
@@ -17,7 +17,6 @@ import {
   invalidateUserSessionHandler,
   getUserSessionsHandler,
 } from "./controller";
-
 import {
   validateRequest,
   requiresUser,
@@ -47,73 +46,73 @@ export default function Route(app: Express): void {
     res.sendFile(path.join(__dirname, "/static/index.html"));
   });
 
-  // OAuthentication
+  // OAuthentication route
   app.get("/api/oauth", OAuthHandler);
   app.get("/api/oauth/callback", OAuthCallbackHandler);
 
-  // Register user
+  // Register user route
   app.post("/api/user", validateRequest(createUserSchema), createUserHandler);
 
-  //confirm code
+  //confirm code route
   app.get("/api/auth/confirm/:confirmationCode", confirmationCodeHandler);
 
-  // Login
+  // Login route
   app.post(
     "/api/sessions",
     validateRequest(createUserSessionSchema),
     createUserSessionHandler
   );
 
-  // get user
+  // get user route
   app.get("/api/user/:userId", requiresUser, getUserHandler);
 
-  // get users by geolocation
+  // get users by geolocation route
   app.get("/api/geolocation/users", requiresUser, getUsersByGeolocationHandler);
 
-  // followUserHandler
-  app.put("/api/follow", requiresUser, followUserHandler);
+  // follow And Unfollow User route
+  app.put("/api/follow", requiresUser, followAndUnfollowUserHandler);
 
-  // update user
+  // update user route
   app.put(
     "/api/user/:userId",
     [requiresUser, validateRequest(updateUserSchema)],
     updateUserHandler
   );
 
-  // Get the user's sessions
+  // Get the user's sessions route
   app.get("/api/sessions", requiresUser, getUserSessionsHandler);
 
-  // Logout
+  // Logout route
   app.delete("/api/sessions", requiresUser, invalidateUserSessionHandler);
 
-  // delete and reactivate user
+  // delete and reactivate user route
   app.put(
     "/api/delete/user/:userId",
     requiresUser,
     deleteAndReactivateUserHandler
   );
 
-  // Create a post
+  // Create a post route
   app.post(
     "/api/posts",
     [requiresUser, validateRequest(createPostSchema)],
     createPostHandler
   );
 
-  // Update a post
+  // Update a post route
   app.put(
-    "/api/posts/:postId",
+    "/api/post/:postId",
     [requiresUser, validateRequest(updatePostSchema)],
     updatePostHandler
   );
 
-  // Get a post
+  // Get a post route
   app.get("/api/posts/:postId", getPostHandler);
 
-  // Get all post
+  // Get all post route
   app.get("/api/posts/all/:userId", getAllPostsHandler);
 
-  // Delete a post
+  // Delete a post route
   app.delete(
     "/api/posts/:postId",
     [requiresUser, validateRequest(deletePostSchema)],

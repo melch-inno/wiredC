@@ -46,22 +46,20 @@ export async function updatePostHandler(
   res: Response
 ): Promise<Object | null> {
   try {
-    const userId = get(req, "user._id");
     const postId = get(req, "params.postId");
+    const userId = get(req, "user._id");
     const update = req.body;
 
-    const post = findPost({ postId: "j652yDK0Gr" }); // get the post
-    log.info("ggjhgjhgjhgh", post);
+    const post: any = findPost({ postId }); // get the post
+
     if (!post) {
       return res.sendStatus(404);
     }
 
     // check if the user is the author of the post
-    if (String(post) !== userId) {
+    if (String(post.user) !== userId) {
       return res.sendStatus(401);
     } else {
-      log.info("ggjhgjhgjhgh", post);
-
       // call the findAndUpdate service to update the post
       const updatedPost = await findAndUpdate({ postId }, update, {
         new: true,
@@ -75,10 +73,12 @@ export async function updatePostHandler(
 }
 
 /**
- * A function to find a post handler
- * get the post id from the request,
- * call the findPost service to find the post,
- * return the post
+ * @function getPostHandler
+ * @description A function to find a post handler,
+ * @requires task call the findPost service to find the post
+ * @param {Request} req - {title, body}
+ * @param {Response} res - json object of the post request
+ * @returns {Promise<Object>} - return the post ,
  */
 export async function getPostHandler(
   req: Request,

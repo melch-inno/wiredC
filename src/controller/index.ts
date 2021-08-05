@@ -9,7 +9,7 @@ export {
   getUserHandler,
   getUsersByGeolocationHandler,
   updateUserHandler,
-  followUserHandler,
+  followAndUnfollowUserHandler,
   deleteAndReactivateUserHandler,
 } from "./user.controller";
 export {
