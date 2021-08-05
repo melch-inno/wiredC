@@ -44,20 +44,17 @@ export async function createPostHandler(
 export async function updatePostHandler(
   req: Request,
   res: Response
-): Promise<Object | null> {
+): Promise<Object> {
   try {
     const postId = get(req, "params.postId");
     const userId = get(req, "user._id");
     const update = req.body;
 
-    const post: any = findPost({ postId }); // get the post
+    const post = await findPost({ postId }); // get the post
 
     if (!post) {
       return res.sendStatus(404);
-    }
-
-    // check if the user is the author of the post
-    if (String(post.user) !== userId) {
+    } else if (post.user !== userId) {
       return res.sendStatus(401);
     } else {
       // call the findAndUpdate service to update the post
@@ -120,6 +117,7 @@ export async function getAllPostsHandler(
 }
 
 /**
+ * @function deletePostHandler
  * A function to delete a post handler,
  * get the user id from the request,
  * get the post id from the request,

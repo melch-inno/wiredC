@@ -14,7 +14,7 @@ export async function createPost(
 
 export async function findPost(
   query: FilterQuery<PostDocument>
-): Promise<PostDocument | Object> {
+): Promise<PostDocument> {
   return await Post.findOne(query).lean();
 }
 
@@ -31,7 +31,7 @@ export function findAndUpdate(
   query: FilterQuery<PostDocument>,
   update: UpdateQuery<PostDocument>,
   options: QueryOptions
-): any {
+): PostDocument | unknown {
   return Post.findOneAndUpdate(query, update, options);
 }
 
