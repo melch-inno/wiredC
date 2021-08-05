@@ -9,10 +9,13 @@
 -
 
 ## dependencies
+
 ```bash
 yarn add express yup config cors express mongoose pino pino-pretty dayjs bcrypt jsonwebtoken lodash nanoid
 ```
+
 ## dev-dependencies
+
 ```bash
 yarn add @types/body-parser @types/config @types/cors @types/express @types/node @types/yup @types/pino @types/mongoose @types/bcrypt @types/jsonwebtoken @types/lodash @types/nanoid ts-node typescript -D
 ```
@@ -21,9 +24,7 @@ yarn add @types/body-parser @types/config @types/cors @types/express @types/node
 
 ```bash
 $ yarn
-
   or
-
 $ npm install
 ```
 
@@ -47,7 +48,7 @@ $ npm test
 ```
 
 How to run App:
-✓ After install the dependencis,
+✓ After installing the dependencies,
 ✓ run yarn dev
 ✓ Use postman to test the api
 ✓ The project has "WiredCraft.postman_collection.json" file in the root folder
@@ -82,11 +83,12 @@ with:
 ## Testing lint:
 
 to reference the stable and latest V1 action
+
 ```bash
 npm run lint
 ```
-## Screenshots of the various testing stages
 
+## Screenshots of the various testing stages
 
 ![3-load-test](./screenshots/1_1.png)
 ![3-load-test](./screenshots/2.png)
@@ -100,8 +102,30 @@ npm run lint
 ![3-load-test](./screenshots/8.png)
 ![3-load-test](./screenshots/9.png)
 ![3-load-test](./screenshots/10.png)
+
 ![3-load-test](./screenshots/11_1.png)
 ![3-load-test](./screenshots/11_2.png)
 ![3-load-test](./screenshots/11_3.png)
 ![3-load-test](./screenshots/11_4.png)
+
+## get user detail
+
+```yaml
+await axios({
+    method: "get",
+    url: `http://localhost:3001/api/user/${userId}`,
+    headers: {
+        "Authorization": `Bearer ${tokens.accessToken}`,
+        'x-refresh': tokens.refreshToken,
+        'Accept': '*/*',
+        'Access-Control-Allow-Methods': 'GET',
+        'Content-Type': 'application/json',
+    }
+})
+```
+
 ![3-load-test](./screenshots/12_1.png)
+
+```
+
+```
