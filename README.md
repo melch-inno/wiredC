@@ -29,11 +29,11 @@ $ npm install
 ```
 
 How to configure App:
-✓ After installing the dependencies,
-✓ run yarn dev
-✓ Use postman to test the api
-✓ The project has "WiredCraft.postman_collection.json" file in the root folder
-✓ It can be imported into postman for quick setting
+1. After installing the dependencies,
+2. run yarn dev
+3. Use postman to test the api
+4. The project has "WiredCraft.postman_collection.json" file in the root folder
+5. It can be imported into postman for quick setting
 
 Build the typescript and package it for distribution
 
@@ -64,7 +64,7 @@ with:
   milliseconds: 1000
 ```
 
-## Testing lint: use `bash yarn all` to run below test in the app
+## Perform all testing: use `yarn all` to run below test in the app
 
 ```bash
 "npm run build && npm run format && npm run lint && npm run package && npm test"
