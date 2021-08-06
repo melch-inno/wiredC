@@ -81,6 +81,7 @@ function Login() {
                     })
                     .catch(function (response) {
                         //handle error
+                        alert.error("Invalid username or password");
                         console.log(response);
                     });
 

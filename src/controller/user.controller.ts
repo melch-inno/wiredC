@@ -184,7 +184,7 @@ export async function followAndUnfollowUserHandler(
       res.status(200).json({ message: "Followed successfully" });
     } else {
       await unfollowUser({ userId, followThisId });
-      res.status(200).json({ message: "unfollowed successfully" });
+      res.status(200).json({ message: "Unfollowed successfully" });
     }
   } catch (err: any) {
     log.error(err);

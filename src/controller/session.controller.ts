@@ -53,7 +53,7 @@ export async function createUserSessionHandler(
       return res.status(401).json("Invalid username or password");
     }
     if (user.isDeleted) {
-      return res.status(200).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
     // Create a session
