@@ -1,4 +1,3 @@
-/* eslint-disable github/no-then */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from "express";
 import { omit, get, isEmpty } from "lodash";
