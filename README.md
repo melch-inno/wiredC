@@ -3,11 +3,8 @@
 </p>
 
 # Node Api using TypeScript || WiredCraft test assignment
-
 - This demonstrate a simple crud operation
 - I used sessions and refresh tokens authentication
--
-
 ## dependencies
 
 ```bash
