@@ -11,11 +11,12 @@ import {
 import log from "../logger";
 
 /**
- * A function to create a new post handler
- * get the user id from the request,
- * get the body from the request,
- * call the  createPost service to create the post,
- * return the post
+ * @function createPostHandler
+ * @description A function to create a new post handler
+ * @param  {Request} req get the user id from the request,
+ * @param  {Response} res json object of the post request,
+ * @return {Response} json object of the post request
+ * @throws {Error} An error if the post id is not provided
  */
 export async function createPostHandler(
   req: Request,
@@ -34,12 +35,14 @@ export async function createPostHandler(
 }
 
 /**
- * A function to update a post handler,
- * get the post id from the request,
- * get the body from the request,
- * check if the user is the author of the post,
- * call the findAndUpdate service to update the post,
- * return the updated post
+ * @function updatePostHandler
+ * @description A function to update a post handler,
+ * @param  {Request} req get the user id from the get() function request,
+ * @param  {Response} res json object of the post request,
+ * @check check if the user is the author of the post,
+ * @func  call the findAndUpdate service to update the post,
+ * @return {Response} json object of the post request
+ * @throws {Error} An error if the post id is not provided
  */
 export async function updatePostHandler(
   req: Request,
@@ -52,6 +55,7 @@ export async function updatePostHandler(
 
     const post = await findPost({ postId }); // get the post
 
+    //check if the user is the author of the post,
     if (!post) {
       return res.sendStatus(404);
     } else if (post.user !== userId) {
@@ -72,7 +76,6 @@ export async function updatePostHandler(
 /**
  * @function getPostHandler
  * @description A function to find a post handler,
- * @requires task call the findPost service to find the post
  * @param {Request} req - {title, body}
  * @param {Response} res - json object of the post request
  * @returns {Promise<Object>} - return the post ,
@@ -96,10 +99,13 @@ export async function getPostHandler(
 }
 
 /**
- * A function to find All Post,
- * get the user id from the request,
- * call the findAllPost service to find all the posts,
- * return the posts
+ * @function getAllPostHandler
+ * @description A function to find All Post,
+ * @param {Request} req the user id from the request,
+ * @param {Response} res json object of the post request,
+ * @call the findAllPost service to find all the posts,
+ * @return the posts
+ * @throws {Error} An error if the post id is not provided
  */
 export async function getAllPostsHandler(
   req: Request,
@@ -118,12 +124,13 @@ export async function getAllPostsHandler(
 
 /**
  * @function deletePostHandler
- * A function to delete a post handler,
- * get the user id from the request,
- * get the post id from the request,
- * check if the user is the author of the post,
- * call the service to delete the post,
- * return
+ * @description A function to delete a post handler,
+ * @param {Request} req the user id from the request,
+ * @param {Response} res  get the post id from the request,
+ * @func check if the user is the author of the post,
+ * @func call the service to delete the post,
+ * @return json object of the post request
+ * @throws {Error} An error if the post id is not provided
  */
 export async function deletePostHandler(
   req: Request,

@@ -2,6 +2,15 @@ import { AnySchema } from "yup";
 import { Request, Response, NextFunction } from "express";
 import log from "../logger";
 
+/**
+ * @function validate
+ * @description validate request
+ * @param {Request} req - express request
+ * @param {Response} res - express response
+ * @param {NextFunction} next - express next
+ * @returns {void}
+ */
+
 const validate =
   (schema: AnySchema) =>
   async (

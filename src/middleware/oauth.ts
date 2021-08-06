@@ -11,6 +11,16 @@ export async function OAuthHandler(req: Request, res: Response): Promise<void> {
   );
 }
 
+/**
+ * @function OAuthCallbackHandler
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<void>} A promise that resolves when the request is complete.
+ * @description Handles the callback from GitHub.
+ * @example
+ * OAuthCallbackHandler(req, res);
+ * // => Redirects to the user's profile page.
+ */
 export async function OAuthCallbackHandler(
   req: Request,
   res: Response

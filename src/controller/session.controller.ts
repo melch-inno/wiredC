@@ -19,7 +19,9 @@ import {
  * @description OAuth2 handler for login and signup
  * @param {Request} req
  * @param {Response} res
- * @returns {Promise<void>}
+ * @returns {Promise<void>} Promise that resolves to nothing
+ * @memberof SessionController
+ * @throws {Error
  */
 export async function oauthHandler(req: Request, res: Response): Promise<void> {
   try {
@@ -38,7 +40,7 @@ export async function oauthHandler(req: Request, res: Response): Promise<void> {
  * @description Create a user session
  * @param {Request} req
  * @param {Response} res
- * @returns {Promise<void>}
+ * @returns {Promise<Object | AnyKeys>} Promise<Object>
  * @private
  */
 export async function createUserSessionHandler(
@@ -77,7 +79,14 @@ export async function createUserSessionHandler(
     return res.status(500).json({ message: error });
   }
 }
-
+/**
+ * @function invalidateUserSessionHandler
+ * @description validate a user session
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<Object>} Promise<Object>
+ * @throws {Error
+ */
 export async function invalidateUserSessionHandler(
   req: Request,
   res: Response
@@ -94,6 +103,14 @@ export async function invalidateUserSessionHandler(
   }
 }
 
+/**
+ * @function getUserSessionsHandler
+ * @description Get user sessions
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<object>} Promise<object>
+ * @throws {Error
+ */
 export async function getUserSessionsHandler(
   req: Request,
   res: Response

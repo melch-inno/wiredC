@@ -4,6 +4,15 @@ import { Request, Response, NextFunction } from "express";
 import { decode } from "../utils/jwt.utils";
 import { reIssueAccessToken } from "../service/session.service";
 
+/**
+ * @func deserializeUser
+ * @desc Deserialize the user from the JWT token
+ * @param {Request} req - The request object
+ * @param {Response} res - The response object
+ * @param {NextFunction} next - The next middleware function
+ * @returns {void} A void
+ * @memberof auth
+ */
 const deserializeUser = async (
   req: Request,
   res: Response,

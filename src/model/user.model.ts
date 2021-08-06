@@ -2,6 +2,24 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import config from "config";
 
+/**
+ * @interface UserDocument
+ * @property {string} email - The user's email address
+ * @property {string} password - The user's password
+ * @property {string} name - The user's name
+ * @property {string} comparePassword - The user's password to compare
+ * @property {boolean} activation status
+ * @property {dob} date of birth
+ * @property {Object} address - The user's address
+ * @property {string} address.street - The user's street
+ * @property {string} address.city - The user's city
+ * @property {string} address.zip - The user's zip
+ * @property {string} description - The user's description
+ * @property {boolean} isAdmin - The user's admin status
+ * @property {boolean} isDeleted - The user's deleted status
+ * @property {Date} createdAt - The date the user was created
+ * @property {Date} updatedAt - The date the user was last updated
+ */
 export interface UserDocument extends mongoose.Document {
   email: string;
   name: string;
@@ -30,6 +48,26 @@ export interface UserDocument extends mongoose.Document {
   updatedAt: Date;
 }
 
+/**
+ * @class UserSchema
+ * @description The schema for the User model
+ * @extends mongoose.Schema
+ * @property {string} email - The user's email address
+ * @property {string} password - The user's password
+ * @property {string} name - The user's name
+ * @property {string} comparePassword - The user's password to compare
+ * @property {boolean} activation status
+ * @property {dob} date of birth
+ * @property {Object} address - The user's address
+ * @property {string} address.street - The user's street
+ * @property {string} address.city - The user's city
+ * @property {string} address.zip - The user's zip
+ * @property {string} description - The user's description
+ * @property {boolean} isAdmin - The user's admin status
+ * @property {boolean} isDeleted - The user's deleted status
+ * @property {Date} createdAt - The date the user was created
+ * @property {Date} updatedAt - The date the user was last updated
+ */
 const UserSchema = new mongoose.Schema(
   {
     email: { type: String, required: true, unique: true },
