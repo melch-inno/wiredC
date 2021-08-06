@@ -110,12 +110,37 @@ npm run lint
 
 ![3-load-test](./screenshots/3_1.png)
 
+## Update a user
+
 ![3-load-test](./screenshots/6.png)
+
+## delete a user
+
+![3-load-test](./screenshots/6_2.png)
+
+## create a post
+
 ![3-load-test](./screenshots/7.png)
+
 ![3-load-test](./screenshots/7_1.png)
+
+## Get a post
+
 ![3-load-test](./screenshots/8.png)
+
+## get all posts by a user
+
 ![3-load-test](./screenshots/9.png)
+
+## update a post
+
 ![3-load-test](./screenshots/10.png)
+
+## delete a post
+
+```yml
+http://localhost:3001/api/posts/{{postId}}
+```
 
 ## Run react frontend to test
 
