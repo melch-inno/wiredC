@@ -6,7 +6,7 @@ import {
   ConfirmationCode,
   findUser,
   followUser,
-  unfollowUser,
+  unFollowUser,
   findUsersWithGeolocation,
   deleteAndReactivate,
   checkFollowing,
@@ -182,7 +182,7 @@ export async function followAndUnfollowUserHandler(
 
       res.status(200).json({ message: "Followed successfully" });
     } else {
-      await unfollowUser({ userId, followThisId });
+      await unFollowUser({ userId, followThisId });
       res.status(200).json({ message: "Unfollowed successfully" });
     }
   } catch (err: any) {

@@ -55,7 +55,7 @@ export async function followUser({
  * @return db.model<UserDocument>("Follow").create(id);
  * @throws {Error}
  */
-export async function unfollowUser({
+export async function unFollowUser({
   userId,
   followThisId,
 }: FollowRelations): Promise<void> {
