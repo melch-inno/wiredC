@@ -1,4 +1,4 @@
-import { AnySchema } from "yup";
+import * as yup from "yup";
 import { Request, Response, NextFunction } from "express";
 import log from "../logger";
 
@@ -11,7 +11,7 @@ import log from "../logger";
  * @returns {Object | void}
  */
 const validate =
-  (schema: AnySchema) =>
+  (schema: yup.AnySchema) =>
   async (
     req: Request,
     res: Response,
