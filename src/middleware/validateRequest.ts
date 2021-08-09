@@ -8,9 +8,8 @@ import log from "../logger";
  * @param {Request} req - express request
  * @param {Response} res - express response
  * @param {NextFunction} next - express next
- * @returns {void}
+ * @returns {Object | void}
  */
-
 const validate =
   (schema: AnySchema) =>
   async (
