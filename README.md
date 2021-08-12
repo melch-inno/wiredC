@@ -2,9 +2,11 @@
   <a href="https://github.com/melch-inno/wiredC/actions"><img alt="typescript-action status" src="https://github.com/melch-inno/wiredC/actions/workflows/test.yml/badge.svg"></a>
 </p>
 
-# Node Api using TypeScript || WiredCraft test assignment
+# Simple Node CRUD Api using TypeScript
+
 - This demonstrate a simple crud operation
 - I used sessions and refresh tokens authentication
+
 ## dependencies
 
 ```bash
@@ -26,6 +28,7 @@ $ npm install
 ```
 
 How to configure App:
+
 1. After installing the dependencies,
 2. run yarn dev
 3. Use postman to test the api
